@@ -1,0 +1,20 @@
+@let isDeleteTmp = isDelete();
+<div class="modal-header justify-content-center dialog-header-config"
+     [class.dialog-header-config]="!isDeleteTmp"
+     [class.dialog-error-header-config]="isDeleteTmp">
+  <h3 class="m-0 text-center">{{title()}}</h3>
+</div>
+<div class="modal-body dialog-body-config">
+  <h4 class="message-config">{{message()}}</h4>
+</div>
+<div class="modal-footer dialog-footer-config">
+  @if(!onlyInfoSignal()) {
+    <button class="btn border-dark"
+            [class.btn-success]="!isDeleteTmp"
+            [class.btn-danger]="isDeleteTmp"
+            (click)="onAccept()">{{nameActionButtonSignal()}}</button>
+  }
+  <button class="btn btn-secondary border-dark"
+          ngbAutofocus
+          (click)="onCancel()">{{'SHARED.BUTTON.CANCEL' | translate}}</button>
+</div>

@@ -1,0 +1,1 @@
+export const DEFAULT_ATTENTION_BELL_LOGO_SIZE = 36;

@@ -1,0 +1,57 @@
+:host {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--dark-smoke-white-color);
+  overflow: auto;
+}
+.access-denied-container-config {
+  width: 800px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  padding: 30px;
+  gap: 20px;
+  background-color: var(--white-color);
+  body {
+    .circle-config{
+      height: 150px;
+      width: 150px;
+      border-radius: 50%;
+      background-color: rgba(255, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .image-config {
+      width: 100%;
+      height: 100%;
+    }
+    .access-denied-text-config{
+      color: #e74d4d;
+      font-weight: bold;
+      margin: 0;
+      text-transform: uppercase;
+      transform: scale(1.3);
+    }
+    .error-cod-container-config{
+      width: 180px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: var(--dark-smoke-white-color);
+      .error-cod-text-config{
+        padding: 7px;
+        margin: 0;
+        text-align: center;
+        text-transform: uppercase;
+        color: rgba(0 ,0 ,0 , 0.5);
+      }
+    }
+  }
+  .footer-config {
+      border-top: 3px solid var(--light-grey-color);
+  }
+}

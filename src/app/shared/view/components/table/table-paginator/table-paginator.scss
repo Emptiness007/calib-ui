@@ -1,0 +1,43 @@
+:host ::ng-deep {
+  ul {
+    margin: 0 !important;
+  }
+  a {
+    color: var(--paginator-color);
+    border-color: var(--paginator-bg-color);
+    box-shadow: none !important;
+    &:focus {
+      color: var(--paginator-color);
+      background-color: var(--paginator-bg-color-focus);
+    }
+    &:hover {
+      color: var(--paginator-color);
+      background-color: var(--paginator-bg-color-hover);
+    }
+  }
+  li {
+    &.active > a {
+      background-color: var(--paginator-bg-color);
+      color: var(--paginator-color);
+      border-color: var(--paginator-bg-color);
+    }
+    &.disabled > a {
+      color: var(--paginator-color-disabled);
+      background-color: var(--paginator-bg-color-disabled);
+    }
+  }
+}
+.select-config {
+  background-color: var(--paginator-bg-color);
+  color: var(--paginator-color);
+  width: 50px;
+  height: 31px!important;
+  padding: 4px 0;
+  font-size: 14px;
+}
+.disable-highlight-text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

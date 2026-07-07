@@ -1,0 +1,79 @@
+:host {
+  height: 50px;
+  margin: 0 -10px 0 -10px;
+  padding: 0 10px 0 10px;
+  color: var(--header-color);
+  background-color: var(--header-bg-color);
+  box-shadow: 0 5px 10px var(--header-shadow-color);
+}
+.mart-8-config {
+  background-image: url(../../../../public/images/holidays/marta8.png);
+  background-position: top center;
+  background-size: contain;
+  background-repeat: repeat-x;
+}
+.header-config {
+  padding: 10px;
+
+  .clock-config {
+    color: var(--header-time-color);
+  }
+
+  .reset-ls-config {
+    color: var(--header-android-color);
+  }
+
+  .clock-config:hover, .fio-config:hover, .theme-config:hover::before, .gear-config:hover::before {
+    animation-name: pulse;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    color: var(--header-fio-color);
+  }
+  .gear-config:hover::before {
+    animation-name: pulse, rotate;
+    animation-duration: 4s, 6s;
+    content: "\f3e2";
+    @keyframes rotate {
+      from { rotate: 0deg; }
+      to { rotate: 360deg; }
+    }
+  }
+
+  .ddm-bottom-border-config {
+    border: 1px solid var(--header-ddm-button-border-color);
+    border-radius: 4px;
+    padding: 3px 5px 3px 5px !important;
+  }
+
+  .bi-sun:hover::before {
+    content: "\f5a1";
+  }
+  .bi-moon-stars:hover::before {
+    content: "\f495";
+  }
+  .bi-palette {
+    rotate: 270deg;
+    &:hover::before {
+      content: "\f4b0";
+    }
+  }
+}
+@keyframes pulse {
+  from { opacity: 1; }
+  50% { opacity: 0.3; }
+  to { opacity: 1; }
+}
+.news-attention-config {
+  position: absolute;
+  top: 10% !important;
+  left: 90% !important;
+  &:hover {
+    animation-name: pulse;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+}
+
+

@@ -1,0 +1,27 @@
+@let id = correctId();
+<label class="disable-highlight-text" for="{{id}}">
+  {{correctTranslateKey() | translate}}{{requiredSuffix()}}
+</label>
+<div class="input-group {{sizeClass()}}">
+  @let fieldValueTmp = fieldValue();
+  @let disabled = isDisabled();
+  @let required = isRequired();
+  <input class="form-control border-dark"
+         [class.ng-invalid]="required && !fieldValueTmp"
+         [class.ng-valid]="required && fieldValueTmp"
+         [autocomplete]="'off'"
+         [disabled]="disabled"
+         [id]="id"
+         [placeholder]="placeholder()"
+         [required]="required"
+         [step]="numberStep()"
+         [type]="'number'"
+         [value]="fieldValueTmp"
+         (input)="inputValue($event)">
+  @if (!disabled) {
+    <button class="btn btn-outline-secondary"
+            (click)="onFieldValueChange(null)">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  }
+</div>

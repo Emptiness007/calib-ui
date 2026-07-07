@@ -37,7 +37,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "public"
               },
               {
                 "glob": "**/*",
@@ -46,7 +47,7 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ]
           },
           "configurations": {
@@ -107,6 +108,11 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "ssl": true,
+            "sslCert": "src/app/shared/public/ssl/localhost.cer",
+            "sslKey": "src/app/shared/public/ssl/localhost.key"
+          },
           "configurations": {
             "production": {
               "buildTarget": "calib-ui:build:production"

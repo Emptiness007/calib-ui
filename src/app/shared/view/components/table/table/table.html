@@ -1,0 +1,82 @@
+@let error = errorTableConfig();
+@let currentObjectList = objectList();
+@let objectShowFieldList = objectShowFieldListInput();
+@let selectedObjectTmp = selectedObject();
+
+@if (error) {
+  <span class="p-0 mt-3 fs-5 text-center text-danger">
+    {{error}}
+    <i *aviAuthAccess
+       class="bi bi-arrow-clockwise fw-bold i-reload-config"
+       type="button"
+       [ngbTooltip]="'SHARED.TOOLTIP.BUTTON.RESET-RELOAD-TABLE' | translate"
+       [openDelay]="openTooltipDelay"
+       (click)="onReloadTable()"></i>
+  </span>
+} @else if (currentObjectList.length === 0) {
+  <span class="p-0 mt-3 fs-5 text-center text-warning">
+    {{textIfObjectListIsEmptyInput() | translate}}
+    <i *aviAuthAccess
+       class="bi bi-arrow-clockwise fw-bold i-reload-config"
+       type="button"
+       [ngbTooltip]="'SHARED.TOOLTIP.BUTTON.RESET-RELOAD-TABLE' | translate"
+       [openDelay]="openTooltipDelay"
+       (click)="onReloadTable()"></i>
+  </span>
+
+} @else {
+  <div class="table-responsive h-100">
+    <table class="table table-hover table-bordered mb-0"
+           [class.table-sm]="tableSM()">
+      <thead>
+        <tr>
+          @for (field of objectShowFieldList; track field) {
+            <th class="disable-highlight-text align-content-start">
+              <span class="text-truncate align-text-top"
+                    type="button"
+                    (click)="onSort(field)">
+                {{ 'TABLE.VIEW.' + field.toUpperCase() | translate }}&nbsp;
+              </span>
+              @if (currentSortColumn() === field.trim()) {
+                <i class="bi bi-config align-middle cursor-pointer"
+                   [class]=currentSortDirectionIconClass()
+                   (click)="onSort(field)"></i>
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (object of currentObjectList; track object.id; let index = $index) {
+          @let rowClassList = getRowClasses(object, selectedObjectTmp);
+          <tr #tr
+              class="cursor-pointer"
+              [class]="rowClassList"
+              [tabIndex]="0"
+              (keydown.arrowUp)="$event.preventDefault(); moveRowFocusUp(index)"
+              (keydown.arrowDown)="$event.preventDefault(); moveRowFocusDown(index)"
+              (keydown.enter)="onSelectObject(object)"
+              (contextmenu)="onShowContextMenu($event, object)"
+              (click)="onSelectObject(object)"
+              (dblclick)="onViewAndSelectObject(object)">
+            @for (field of objectShowFieldList; track field) {
+              <td class="text-truncate">
+                <span>{{getTextForCell(object[field])}}</span>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+    @let contextMenuT = contextMenuTemplate();
+    @if (showContextMenu() && contextMenuT) {
+      <div class="contextmenu-config"
+           aviCloseContextmenu
+           [style.left.px]="positionContextMenuX()"
+           [style.top.px]="positionContextMenuY()"
+           (outside)="onHiddenContextMenu()">
+        <ng-container *ngTemplateOutlet="contextMenuT; context: {$implicit: selectedObjectTmp}"></ng-container>
+      </div>
+    }
+  </div>
+}

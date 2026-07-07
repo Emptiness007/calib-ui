@@ -1,0 +1,90 @@
+[data-theme="standard"] {
+  --primary-color: #024d6c;
+  --sky-color: #4774C833;
+  --dark-primary-color: #024D6C66;
+  --light-primary-color: #024D6C21;
+  --dark-smoke-white-color: #C9C9C9AD;
+  --smoke-white-color: #e7e7e7;
+  --ligth-smoke-white-color: #f7f7f7;
+  --grey-color: #737373;
+  --light-grey-color: #d3d3d3;
+  --black-color: black;
+  --black-50-color: #00000080;
+  --white-color: #ffffff;
+  --red-color: red;
+  --ligtn-red-color: #a15e5e61;
+  --tomato-color: tomato;
+  --light-tomato-color: #ff63477f;
+  --green-color: #09a100;
+  --light-green-color: lightgreen;
+  --light-blue-color: #b6cdee;
+  --active-base-green: rgba(152, 251, 152);
+
+  --spinner-text-color: var(--red-color);
+  --spinner-plane-color: var(--black-color);
+  --spinner-dot-color: var(--primary-color);
+
+  --input-invalid-border-color: #a94442;
+  --input-valid-border-color: #42A948;
+
+  --header-color: var(--smoke-white-color);
+  --header-bg-color: var(--primary-color);
+  --header-shadow-color: var(--grey-color);
+  --header-time-color: var(--light-green-color);
+  --header-android-color: var(--light-green-color);
+  --header-fio-color: var(--light-green-color);
+  --header-ddm-color: var(--black-color);
+  --header-ddm-bg-color: var(--ligth-smoke-white-color);
+  --header-ddm-button-border-color: var(--light-grey-color);
+  --header-ddm-button-bg-color: var(--light-grey-color);
+
+  --footer-color: var(--smoke-white-color);
+  --footer-bg-color: var(--primary-color);
+  --footer-shadow-color: var(--grey-color);
+
+  --dialog-news-bg-color: var(--black-color);
+  --dialog-about-bg-color: var(--black-color);
+  --dialog-error-header-bg-color: var(--ligtn-red-color);
+  --dialog-error-header-color: var(--red-color);
+  --dialog-header-bg-color: var(--primary-color);
+  --dialog-header-color: var(--smoke-white-color);
+  --dialog-body-bg-color: var(--smoke-white-color);
+  --dialog-footer-bg-color: var(--smoke-white-color);
+
+  --news-user-version-color: var(--tomato-color);
+  --news-current-version-color: var(--green-color);
+  --news-board-bg-color: var(--ligth-smoke-white-color);
+
+  --table-thead-bg-color: var(--light-blue-color);
+  --table-object-active-bg-color: var(--active-base-green);
+
+  --scroll-thumb-bg-color: var(--dark-primary-color);
+  --scroll-track-bg-color: var(--dark-smoke-white-color);
+
+  --ddm-color: var(--black-color);
+  --ddm-bg-color: var(--ligth-smoke-white-color);
+  --ddm-button-hover-bg-color: var(--light-grey-color);
+  --ddm-button-disabled-bg-color: var(--grey-color);
+
+  --paginator-color: var(--black-color);
+  --paginator-color-disabled: var(--grey-color);
+  --paginator-bg-color: var(--sky-color);
+  --paginator-bg-color-focus: var(--white-color);
+  --paginator-bg-color-hover: var(--ligth-smoke-white-color);
+  --paginator-bg-color-disabled: var(--smoke-white-color);
+
+  --tag-color: #eef3fc;
+  --tag-text-color: #1f5e7e;
+}
+
+[data-theme="dark"] {
+  --primary-color: #6f8894;
+
+  --spinner-dot-color: var(--primary-color, #024d6c);
+}
+
+[data-theme="light"] {
+
+  --spinner-dot-color: var(--primary-color, #024d6c);
+
+}

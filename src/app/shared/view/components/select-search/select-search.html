@@ -1,0 +1,58 @@
+<div ngbDropdown container="body" #ddm="ngbDropdown"><!--тут проверить на 2х ddm будут ли они друг друга перекрывать хотя не должны-->
+  @let id = correctId();
+  @let selectedItemTmp = selectedItem();
+  <label class="disable-highlight-text" for="{{id}}">
+    {{correctTranslateKey() | translate}}{{requiredSuffix()}}
+  </label>
+  <div class="input-group {{sizeClass()}}">
+    @let selectedItemInListTmp = selectedItemInList();
+    @let disabled = isDisabled();
+    @let required = isRequired();
+    <input class="form-control border-dark"
+           [class.select-search-config]="!disabled"
+           [class.ng-invalid]="required && !selectedItemInListTmp"
+           [class.ng-valid]="required && selectedItemInListTmp"
+           ngbDropdownToggle
+           [autocomplete]="'off'"
+           [disabled]="disabled"
+           [id]="id"
+           [placeholder]="placeholder()"
+           [readonly]="isReadOnly()"
+           [required]="required"
+           [type]="'text'"
+           [value]="selectedItemTmp"
+           (input)="ddm.open(); onFilter($event)">
+    @if (!disabled) {
+      <button class="btn btn-outline-secondary"
+              (click)="onSelectDdmItem(null)">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    }
+  </div>
+  <div class="p-2" ngbDropdownMenu>
+<!--&lt;!&ndash;    <p *ngIf="!locationList" ngbDropdownItem>{{'INPUT.ENTER-MIN' | translate:{value: locationTitleMinLength} }}</p>-->
+<!--        это оставить, вдруг понадобится этот функционал, то тогда я его допилю&ndash;&gt;-->
+    @let someListTmp = filterSomeList();
+    @if (!someListTmp) {
+      <span class="disable-highlight-text text-danger">{{'SHARED.INPUT.LIST-IS-ERROR' | translate}}</span>
+    } @else {
+      @if (someListTmp.length == 0) {
+        @if (selectedItemTmp) {
+          <span class="disable-highlight-text text-info text-center">{{'SHARED.INPUT.NO-RESULT' | translate}}</span>
+        } @else {
+          <span class="disable-highlight-text text-warning text-center">{{'SHARED.INPUT.LIST-IS-EMPTY' | translate}}</span>
+        }
+      } @else {
+        <span class="disable-highlight-text">{{'SHARED.INPUT.SELECT-ONE' | translate}}</span>
+        <div class="dropdown-divider"></div>
+        <div class="ddm-select-config">
+          @for (item of someListTmp; track trackById(item)) {
+            <button ngbDropdownItem
+                    [innerHTML]="highlightText(item, selectedItemTmp)"
+                    (click)="onSelectDdmItem(item)"></button>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>

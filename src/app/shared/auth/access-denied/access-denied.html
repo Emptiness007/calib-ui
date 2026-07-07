@@ -1,0 +1,21 @@
+<div class="access-denied-container-config">
+  <body class="d-flex flex-column align-items-center justify-content-between">
+    <div class="circle-config">
+      <img class="image-config" [src]="'public/shared/images/unavailable-icon.png'" alt="unavailable" >
+    </div>
+    <h1 class="access-denied-text-config">{{"SHARED.AUTH.ACCESS-DENIED" | translate}}</h1>
+    <div class="error-cod-container-config">
+      <h4 class="error-cod-text-config">{{"SHARED.AUTH.ERROR-CODE" | translate}}</h4>
+    </div>
+    <div class="d-flex flex-column">
+      <span class="text-center fs-6 mb-1">{{"SHARED.AUTH.RESPONSE-DENIED" | translate}}</span>
+      <span class="text-center fs-6">{{"SHARED.AUTH.RESPONSE-DENIED-SOLVING" | translate}}</span>
+    </div>
+    <button class="btn btn-secondary border-dark" (click)="openPlatformPage()">
+      <i class="bi bi-box-arrow-right"></i>&nbsp;{{"SHARED.AUTH.ENTER-PLATFORM" | translate}}
+    </button>
+  </body>
+  <footer class="d-flex pt-1 footer-config">
+    <span class="text-center">{{"SHARED.AUTH.COPYRIGHT" | translate}}</span>
+  </footer>
+</div>

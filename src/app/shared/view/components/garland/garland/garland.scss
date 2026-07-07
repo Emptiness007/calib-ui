@@ -1,0 +1,133 @@
+:host {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  display: flex;
+  overflow: hidden;
+  position: absolute;
+  z-index: 5000;
+  //pointer-events: none;
+  &:hover .garland-root-config .garland-part-animation-config{
+    animation-duration: 1s;
+  }
+}
+/*настройка гирлянды*/
+.garland-root-config {
+  display: flex;
+  position: relative;
+  /*настройка провода*/
+  .garland-part-wire-config {
+    overflow: visible;
+    color: #000000; /*цвет провода*/
+  }
+  /*позиционирование лампы 1 с проводом*/
+  .garland-part-lamp1 {
+    margin-top: -5px;
+    margin-left: -9px;
+    /*добавление анимации мигания лампы и тени*/
+    .garland-part-lamp-color, .garland-part-shadow-color {
+      animation-name: garland-part-animation-lamp1;
+      @keyframes garland-part-animation-lamp1 {
+        0% {color: #07f}
+        20% {color: #17d685}
+        40% {color: #ffd91d}
+        60% {color: #f679ff}
+        80% {color: #ab47e9}
+        to {color: #07f}
+      }
+    }
+  }
+  /*позиционирование лампы 2 с проводом*/
+  .garland-part-lamp2 {
+    margin-top: -3px;
+    margin-left: -8px;
+    /*добавление анимации мигания лампы и тени*/
+    .garland-part-lamp-color, .garland-part-shadow-color {
+      animation-name: garland-part-animation-lamp2;
+      @keyframes garland-part-animation-lamp2 {
+        0% {color: #f679ff}
+        20% {color: #ffd91d}
+        40% {color: #ab47e9}
+        60% {color: #07f}
+        80% {color: #17d685}
+        to {color: #f679ff}
+      }
+    }
+  }
+  /*позиционирование лампы 3 с проводом*/
+  .garland-part-lamp3 {
+    margin-top: -8px;
+    margin-left: -8px;
+    /*добавление анимации мигания лампы и тени*/
+    .garland-part-lamp-color, .garland-part-shadow-color {
+      animation-name: garland-part-animation-lamp3;
+      @keyframes garland-part-animation-lamp3 {
+        0% {color: #17d685}
+        20% {color: #07f}
+        40% {color: #ab47e9}
+        60% {color: #f679ff}
+        80% {color: #ffd91d}
+        to {color: #17d685}
+      }
+    }
+  }
+  /*позиционирование лампы 4 с проводом*/
+  .garland-part-lamp4 {
+    margin-top: -6px;
+    margin-left: -8px;
+    /*добавление анимации мигания лампы и тени*/
+    .garland-part-lamp-color, .garland-part-shadow-color {
+      animation-name: garland-part-animation-lamp4;
+      @keyframes garland-part-animation-lamp4 {
+        0% {color: #ffd91d}
+        20% {color: #f679ff}
+        40% {color: #17d685}
+        60% {color: #07f}
+        80% {color: #ab47e9}
+        to {color: #ffd91d}
+      }
+    }
+  }
+  /*позиционирование лампы 5 с проводом*/
+  .garland-part-lamp5 {
+    margin-top: -7px;
+    margin-left: -10px;
+    /*добавление анимации мигания лампы и тени*/
+    .garland-part-lamp-color, .garland-part-shadow-color {
+      animation-name: garland-part-animation-lamp5;
+      @keyframes garland-part-animation-lamp5 {
+        0% { color: #ab47e9 }
+        20% { color: #07f }
+        40% { color: #17d685 }
+        60% { color: #ffd91d }
+        80% { color: #f679ff }
+        to { color: #ab47e9 }
+      }
+    }
+  }
+  /*настройка анимации мигания*/
+  .garland-part-animation-config {
+    will-change: transform;
+    transform: translateZ(0);
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: steps(24, end);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

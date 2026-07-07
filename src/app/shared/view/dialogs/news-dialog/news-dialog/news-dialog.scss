@@ -1,0 +1,39 @@
+
+.text-old-version-config {
+  font-weight: normal;
+}
+.text-new-version-config {
+  font-weight: bold;
+}
+.news-board-config {
+  padding: 10px 10px 4px 10px;
+  background-color: var(--news-board-bg-color);
+  border-radius: 5px;
+  min-height: 150px;
+}
+
+.tag{
+  background-color: var(--tag-color);
+  display: flex;
+  border-radius: 30px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.85rem;
+  color: var(--tag-text-color);
+}
+
+.vertical{
+  margin: 5px 0;
+  width: 0;
+  height: 100%;
+  border: none;
+  border-left: 2px solid #6c9ebf;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 10px;
+}
+
+
+

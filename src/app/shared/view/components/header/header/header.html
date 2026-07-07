@@ -1,0 +1,79 @@
+@if (holidayIsNY()) {
+  <avi-garland></avi-garland>
+}
+<div class="d-flex h-100 w-100 header-config {{currentHoliday}}-config">
+  <div class="d-flex col justify-content-start align-items-center">
+    <app-shared-clock class="fs-4 clock-config text-nowrap"></app-shared-clock>
+  </div>
+  <div class="d-flex col-6 justify-content-center align-items-center">
+    <h1 class="m-0 fs-2 fw-normal">{{appName()}}</h1>
+    <h6>&nbsp;{{currentAppVersion()}}</h6>
+    @if (appIsProd()) {
+      <i class="bi bi-android2 cursor-pointer reset-ls-config ms-2 fs-2" (click)="onResetLS()"></i>
+    }
+  </div>
+  <div class="d-flex col justify-content-end align-items-center">
+    <div class="d-inline-block" ngbDropdown>
+      <span class="fs-6 fio-config" type="button" ngbDropdownToggle>
+        <i class="bi bi-person-square"></i>
+        {{currentUser().fullName}}
+      </span>
+      <div class="p-2 ddm-config" ngbDropdownMenu>
+        <div class="mb-2 p-0 text-center">
+          <label class="pb-1 header-ddm-text-color" for="roleSelect">{{'SHARED.HEADER.CURRENT-ROLE' | translate}}&nbsp;:</label>
+          <select class="form-select form-select-sm cursor-pointer text-capitalize"
+                  id="roleSelect"
+                  (change)="onSelectRole($event)">
+            @for (role of currentAppRoleList(); track role.id) {
+              <option [selected]="role == currentRole()"
+                      value="{{role.id}}">{{getRoleViewName(role)}}</option>
+            }
+          </select>
+        </div>
+        <button class="ddm-bottom-border-config" ngbDropdownItem
+                (click)="onChangeUser()">
+          <i class="bi bi-box-arrow-right"></i> {{'SHARED.BUTTON.CHANGE-USER' | translate}}</button>
+      </div>
+    </div>
+    <i class="d-inline-block bi bi-{{currentAppThemeIcon()}} fs-4 px-3 theme-config" type="button" (click)="onChangeTheme()"></i>
+    <div class="d-inline-block pe-3" ngbDropdown>
+      <i class="bi bi-gear fs-4 cursor-pointer gear-config" type="button" ngbDropdownToggle></i>
+      @if (showNewsAttention()){
+        <ng-container [ngTemplateOutlet]="attentionBell"></ng-container>
+      }
+      <div class="p-2 ddm-config" ngbDropdownMenu>
+        <button class="btn mb-2 p-0"
+                ngbDropdownItem
+                (click)="onOpenNewsDialog()">
+          <i class="bi bi-newspaper"></i>&nbsp;{{'SHARED.BUTTON.NEWS' | translate}}
+          @if (showNewsAttention()){
+            <ng-container [ngTemplateOutlet]="attentionBell"></ng-container>
+          }
+        </button>
+<!--        <button class="btn mb-2 p-0"-->
+<!--                ngbDropdownItem-->
+<!--                (click)="onOpenSettingsDialog()">-->
+<!--          <i class="bi bi-gear"></i> {{'SHARED.BUTTON.SETTINGS' | translate}}</button>-->
+        <button class="btn mb-2 p-0"
+                ngbDropdownItem
+                [disabled]="!instruction()"
+                (click)="onOpenInstruction()">
+          <i class="bi bi-file-earmark-pdf"></i> {{'SHARED.BUTTON.INSTRUCTION' | translate}}</button>
+        <button class="btn mb-2 p-0"
+                ngbDropdownItem
+                (click)="onOpenAboutDialog()">
+          <i class="bi bi-info-square"></i> {{'SHARED.BUTTON.ABOUT' | translate}}</button>
+        <button class="btn p-0"
+                ngbDropdownItem
+                (click)="onExitApp()">
+          <i class="bi bi-door-open"></i> {{'SHARED.BUTTON.EXIT' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #attentionBell>
+  <img class="news-attention-config translate-middle p-2 cursor-pointer"
+       [src]="'public/shared/images/attention-fill.gif'" [alt]="'attention bell'"
+       [height]="attentionBellLogoSize" [width]="attentionBellLogoSize"
+       (click)="$event.stopPropagation(); onOpenNewsDialog()">
+</ng-template>

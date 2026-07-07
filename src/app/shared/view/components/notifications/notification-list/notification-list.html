@@ -1,0 +1,5 @@
+@for (notification of notificationList(); track notification.id) {
+  <avi-notification
+    [notification]="notification"
+    (closeNotification)="removeNotification($event)"></avi-notification>
+}

@@ -1,0 +1,10 @@
+<span class="col text-start"></span>
+<span class="col text-center cursor-pointer text-decoration-underline" (click)="onOpenAboutDialog()">
+  {{'SHARED.FOOTER.DEPARTMENT-NAME' | translate}}
+  <i class="bi bi-info-square"></i>
+</span>
+<span class="col text-end">
+  ©&nbsp;2025-{{currentYear}}&nbsp;
+  <img class="align-text-top" [src]="'public/shared/images/avi-logo.png'" alt="avi-logo" [height]="imgSize" [width]="imgSize">
+  {{'SHARED.FOOTER.OWNERSHIP' | translate}}
+</span>

@@ -1,1 +1,208 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'app/shared/theme/themes';
+
+@use 'bootstrap/scss/bootstrap';
+@use 'bootstrap-icons/font/bootstrap-icons';
+
+
+//значения по умолчанию для всего документа
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: "Roboto Light", Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  overflow: hidden;
+  letter-spacing: normal;
+}
+//подсветка валидации форм
+.ng-invalid[required], .ng-invalid.required { border-left: 5px solid var(--input-invalid-border-color, #a94442) !important; }
+.ng-valid[required], .ng-valid.required { border-left: 5px solid var(--input-valid-border-color, #42A948) !important; }
+
+//подсветка валидации checkbox
+.form-check-input.ng-invalid[required], .form-check-input.ng-invalid.required, .form-check-input.required.ng-invalid {
+  border-color: var(--input-invalid-border-color, #a94442) !important;
+}
+.form-check-input.ng-valid[required], .form-check-input.ng-valid.required, .form-check-input.required.ng-valid {
+  border-color: var(--input-valid-border-color, #42A948) !important;
+}
+
+//курсоры
+.cursor-pointer{ cursor: pointer !important; } //рука
+.cursor-ban{ cursor: not-allowed !important; } //круг с диагональной чертой красного цвета
+//удаление стрелочки у ddm
+i.dropdown-toggle:after { display: none; }
+//настройки выпадающего меню
+.ddm-config {
+  color: var(--ddm-color);
+  background-color: var(--ddm-bg-color);
+  z-index: 2001;
+  & button {
+    &:hover {
+      background-color: var(--ddm-button-hover-bg-color);
+    }
+    &.disabled {
+      color: var(--ddm-button-disabled-bg-color);
+    }
+  }
+}
+//настройка контекстного меню
+.contextmenu-config {
+  position: absolute;
+  z-index: 2002;
+  margin: 0;
+  & div.ddm-config {
+    border-top-left-radius: 0;
+  }
+}
+//запретить выделение текста мышкой
+.disable-highlight-text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+//настройка хедера окна с ошибкой
+.dialog-error-header-config{
+  background-color: var(--dialog-error-header-bg-color);
+  color: var(--dialog-error-header-color);
+  border: none;
+}
+//настройка заднего фона при открытии окна настроек
+.dialog-news-backdrop-config {
+  background-color: var(--dialog-news-bg-color);
+  opacity: 80% !important;
+}
+//настройка заднего фона при открытии окна о приложении
+.dialog-about-backdrop-config {
+  background-color: var(--dialog-about-bg-color);
+  opacity: 80% !important;
+}
+//настройка основного вида диалогового окна
+.dialog-header-config {
+  background-color: var(--dialog-header-bg-color);
+  color: var(--dialog-header-color);
+  border: none;
+}
+.dialog-body-config {
+  background-color: var(--dialog-body-bg-color);
+  border: none;
+  padding: 4px 16px;
+}
+.dialog-footer-config {
+  background-color: var(--dialog-footer-bg-color);
+  border: none;
+  padding-top: 4px;
+}
+//настройка заголовков у таблиц
+thead {
+  //background-color: red;
+  --bs-table-bg: var(--table-thead-bg-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  & tr {
+    z-index: 1001;
+    border-width: 0 0 !important;
+  }
+}
+//настройка отображения прокрутки
+::-webkit-scrollbar {
+  height: 10px; /* Высота горизонтального скроллинга */
+  width: 10px; /* Ширина вертикального скроллинга */
+}
+::-webkit-scrollbar-track {/* стилистика полоски по которой двигаем ползунок скроллинга */
+  background: var(--scroll-track-bg-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {/* стилистика ползунка скроллинга */
+  background-color: var(--scroll-thumb-bg-color);
+  border-radius: 4px;
+}
+
+
+.i-button-config {
+  &.disabled {
+    color: lightgrey!important;
+    cursor: default;
+    pointer-events: none;
+  }
+  &:not(.disabled) {
+    &:hover {
+      transform: scale(1.3);
+    }
+    &:active {
+      transform: scale(1.2);
+    }
+  }
+}
+//размер шрифта таблиц
+.fs-0-t-config {
+  font-size: 12px;
+}
+.fs-1-t-config {
+  font-size: 14px;
+}
+.fs-2-t-config {
+  font-size: 16px;
+}
+//размер шрифта контекстного меню
+.fs-0-cm-config {
+  font-size: 14px;
+}
+.fs-1-cm-config {
+  font-size: 16px;
+}
+.fs-2-cm-config {
+  font-size: 18px;
+}
+.table-tomato-color {
+  --bs-table-bg: var(--tomato-color);
+}
+.table-green-color {
+  --bs-table-bg: var(--active-base-green);
+}
+.table-blue-color {
+  --bs-table-bg: var(--light-blue-color);
+}
+
+
+//кастомные кнопки
+.btn {
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color, #024d6c);
+  border-color: var(--primary-color, #024d6c);
+  color: var(--white-color, #ffffff);
+
+  &:hover{
+    background-color: var(--dark-primary-color, #024D6C66);
+    border-color: var(--dark-primary-color, #024D6C66);
+  }
+}
+
+.btn-outline-primary {
+  color: var(--primary-color, #024d6c);
+  border-color: var(--primary-color, #024d6c);
+
+  &:hover{
+    background-color: var(--primary-color, #024d6c);
+    color: var(--white-color, #ffffff);
+    border-color: var(--primary-color, #024d6c);
+  }
+}
+
+.btn-outline-danger{
+  color: var(--red-color, red);
+  border-color: var(--red-color, red);
+
+  &:hover{
+    background-color: var(--red-color, red);
+    color: var(--white-color, #ffffff);
+  }
+}
+

@@ -1,0 +1,62 @@
+<div ngbDropdown container="body" #ddm="ngbDropdown">
+  @let id = correctId();
+  <label class="disable-highlight-text" for="{{id}}">
+    {{correctTranslateKey() | translate}}{{requiredSuffix()}}
+  </label>
+  <div class="input-group {{sizeClass()}}">
+    @let valid = isValid();
+    @let disabled = isDisabled();
+    <input class="form-control border-dark"
+           [class.cursor-pointer]="!disabled"
+           [class.drag-active]="dragActive() && !disabled"
+           [class.ng-invalid]="!valid"
+           [class.ng-valid]="valid"
+           ngbDropdownToggle
+           [autocomplete]="'off'"
+           [disabled]="disabled"
+           [id]="id"
+           [readonly]="true"
+           [required]="isRequired()"
+           [type]="'text'"
+           [value]="fileName() || ('SHARED.INPUT.SELECT-FILE' | translate)"
+           (mousedown)="$event.preventDefault()"
+           (dragover)="onDragOver($event)"
+           (dragleave)="onDragLeave($event)"
+           (drop)="onDrop($event)">
+    @if (!disabled) {
+      <input #inputFiles
+             style="display: none"
+             [accept]="acceptedFileTypeList().toString()"
+             [multiple]="isMultiple()"
+             [type]="'file'"
+             (change)="onSelectFiles($event)">
+      <button class="btn btn-outline-secondary"
+              (click)="onTriggerSelectFileList(inputFiles)">
+        <i class="bi bi-upload"></i>
+      </button>
+      <button class="btn btn-outline-secondary"
+              (click)="outputSelectedFileList(null)">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    }
+  </div>
+  <div class="p-2" ngbDropdownMenu>
+    @let fileListTmp = fileList();
+    @if (fileListTmp) {
+      <span class="disable-highlight-text text-center">{{'SHARED.INPUT.FILES-IS-SELECTED' | translate}}</span>
+      <div class="dropdown-divider"></div>
+      <div class="ddm-select-files-config">
+        @for (file of fileListTmp; track file.name) {
+          <p class="m-0 pe-1">{{file.name}}</p>
+        }
+      </div>
+    } @else {
+      <span class="disable-highlight-text text-warning text-center">{{'SHARED.INPUT.FILES-IS-EMPTY' | translate}}</span>
+    }
+  </div>
+</div>
+
+
+
+
+

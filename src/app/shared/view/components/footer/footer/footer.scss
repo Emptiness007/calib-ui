@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  height: 20px;
+  margin: 0 -15px 0 -15px;
+  padding: 0 20px 0 20px;
+  color: var(--footer-color);
+  background-color: var(--footer-bg-color);
+  box-shadow: 0 -5px 10px var(--footer-shadow-color);
+}

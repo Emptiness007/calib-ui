@@ -1,0 +1,50 @@
+<!--ngb-pagination-->
+<!--[directionLinks]="false" : убирает кнопки следующая/предыдущая страница-->
+<!--[boundaryLinks]="true" : отображать кнопки на начальную/последнюю страницу-->
+<!--[maxSize]="5" : кол-во страниц для быстрого выбора-->
+<!--[rotate]="true" : прокрутка номеров страниц чтоб выбранная была в центре кол-ва указанного в maxSize-->
+<!--[ellipses]="false" : всегда отображать номер последней страницы  и ставить многоточие, если maxSize меньше чем всего страниц-->
+<!--size="sm/lg" : размер строки переходов по страницам-->
+<!--[disabled]="true/false" : включить/отключить переход по страницам-->
+@let currentPageSizeTmp = currentPageSize();
+@let totalElements = totalFoundedObjects();
+@if (searchObject() && totalElements) {
+  <div class="d-flex justify-content-center align-items-center">
+    @let uuid = 'selectPageSize-' + someNumberId();
+    <label class="disable-highlight-text" for="{{uuid}}">{{'SHARED.TABLE.PAGINATOR.ELEMENTS-ON-PAGE' | translate}}</label>
+    <select class="btn btn-sm border h-100 mx-1 select-config"
+            id="{{uuid}}"
+            [ngModel]="currentPageSizeTmp"
+            (ngModelChange)="onClickPageSizeChanged($event)">
+      @for (pageSize of currentPageSizeList(); track pageSize) {
+        @if (pageSize === 65535) {
+          <option [ngValue]="pageSize">{{'SHARED.TABLE.PAGINATOR.ALL' | translate}}</option>
+        } @else {
+          <option [ngValue]="pageSize">{{ pageSize }}</option>
+        }
+      }
+    </select>
+    <ngb-pagination class="m-0 p-0 border-primary"
+                    [size]="'sm'"
+                    [page]="currentPageNumber() + 1"
+                    [pageSize]="currentPageSizeTmp"
+                    [collectionSize]="totalElements"
+                    (pageChange)=onClickPageChanged($event)
+
+                    [maxSize]="1"
+                    [rotate]="true"
+                    [ellipses]="false"
+                    [boundaryLinks]="true"
+                    [directionLinks]="true">
+      <ng-template ngbPaginationFirst>«</ng-template>
+      <ng-template ngbPaginationLast>»</ng-template>
+      <ng-template ngbPaginationPrevious>‹</ng-template>
+      <ng-template ngbPaginationNext>›</ng-template>
+      <ng-template ngbPaginationEllipsis>...</ng-template>
+      <ng-template ngbPaginationNumber>
+        {{currentElements()}}&nbsp;{{'SHARED.TABLE.PAGINATOR.FROM' | translate}}&nbsp;{{totalElements}}
+      </ng-template>
+
+    </ngb-pagination>
+  </div>
+}

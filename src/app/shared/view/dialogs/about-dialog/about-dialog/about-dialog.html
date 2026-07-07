@@ -1,0 +1,56 @@
+<div class="modal-header d-flex justify-content-center dialog-header-config">
+  <h3 class="m-0 text-center">{{"SHARED.DIALOG.ABOUT.TITLE" | translate}}</h3>
+</div>
+<div class="modal-body d-flex dialog-body-config gap-3">
+  <div class="d-flex flex-column col-7 about-section my-3">
+    <h5 class="bi bi-people-fill fw-bold">&nbsp;{{"SHARED.DIALOG.ABOUT.DEPARTMENT.TITLE" | translate}}</h5>
+    <div class="d-flex flex-column gap-3">
+      @for (worker of workerList; track worker.email) {
+        <div  class="d-flex flex-column development-card">
+          <h5 class="bi bi-person-fill fw-bold">&nbsp;{{ worker.fio }}</h5>
+          <div class="d-flex gap-2">
+            <span>{{worker.post}}</span>
+            <a class="bi bi-envelope-fill text-decoration-none"
+               href="mailto:{{worker.email}}"
+               [ngbTooltip]="('SHARED.TOOLTIP.LINK.MAIL' | translate)"
+               [openDelay]="openTooltipDelay">&nbsp;{{worker.email}}</a>
+            <a class="bi bi-telephone-inbound-fill text-decoration-none"
+               href="tel:{{worker.phone}}"
+               [ngbTooltip]="('SHARED.TOOLTIP.LINK.TEL' | translate)"
+               [openDelay]="openTooltipDelay">&nbsp;{{worker.phone}}</a>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="d-flex flex-column justify-content-between">
+    <div class="d-flex flex-column gap-1 my-3">
+      <div class="d-flex gap-2 justify-content-center info-section">
+        <img class="app-icon" [src]="'public/favicon.ico'" alt="app-icon">
+        <div class="d-flex flex-column align-items-center">
+          <h2>{{APP_NAME | translate}}</h2>
+          <h5>{{"SHARED.DIALOG.ABOUT.TEXT.CURRENT-VERSION" | translate}}&nbsp;{{CURRENT_APP_VERSION}}</h5>
+        </div>
+      </div>
+      <div class="d-flex flex-column gap-3">
+        <div>
+          <h5 class="bi bi-info-circle-fill fw-bold">&nbsp;{{"SHARED.DIALOG.ABOUT.TEXT.DESCRIPTION" | translate}}</h5>
+          <span>{{ "APP.INFO" | translate }}</span>
+        </div>
+        <div>
+          <h5 class="bi bi-stack fw-bold">&nbsp;{{"SHARED.DIALOG.ABOUT.STACK.TITLE" | translate}}</h5>
+          @for (stack of stackList; track stack.library) {
+            <div>
+              <span class="fs-6">{{stack.translateKey | translate}}:</span>
+              <span class="fs-5 fw-bold">&nbsp;{{ stack.library }}</span>
+              <span class="fs-5">&nbsp;{{ stack.version }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-secondary border-dark align-self-end"
+            ngbAutofocus
+            (click)="onClose()">{{"SHARED.BUTTON.CLOSE" | translate}}</button>
+  </div>
+</div>

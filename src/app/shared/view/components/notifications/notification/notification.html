@@ -1,0 +1,9 @@
+@let ntf = notification();
+<ngb-toast
+  [class]="getClass(ntf.classNameList)"
+  [autohide]="ntf.autoHide"
+  [delay]="ntf.delayHide"
+  [header]="title()"
+  (hidden)="removeNotification(ntf)">
+  {{message()}}
+</ngb-toast>

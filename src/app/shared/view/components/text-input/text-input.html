@@ -1,0 +1,49 @@
+@let id = correctId();
+<label class="disable-highlight-text" for="{{id}}">
+  {{correctTranslateKey() | translate}}{{requiredSuffix()}}
+</label>
+<div class="input-group {{sizeClass()}}">
+  @let fieldValueTmp = fieldValue();
+  @let disabled = isDisabled();
+  @let required = isRequired();
+  @if (isTextArea()) {
+    <textarea class="form-control border-dark"
+              [class.ng-invalid]="required && !fieldValueTmp"
+              [class.ng-valid]="required && fieldValueTmp" [disabled]="disabled"
+              [id]="id"
+              [placeholder]="placeholder()"
+              [required]="required"
+              [value]="fieldValueTmp"
+              (input)="inputValue($event)"></textarea>
+  } @else {
+    <input class="form-control border-dark"
+           [class.ng-invalid]="required && !fieldValueTmp"
+           [class.ng-valid]="required && fieldValueTmp"
+           [autocomplete]="'off'"
+           [disabled]="disabled"
+           [id]="id"
+           [placeholder]="placeholder()"
+           [required]="required"
+           [type]="'text'"
+           [value]="fieldValueTmp"
+           (input)="inputValue($event)">
+  }
+  @if (!disabled) {
+    @if(buttonStates().isNT) {
+      <button class="btn btn-outline-secondary"
+              (click)="onFieldValueChange(DEFAULT_NT)">
+        {{'SHARED.BUTTON.' + EmptyInputEnum.NT | translate}}
+      </button>
+    }
+    @if(buttonStates().isND) {
+      <button class="btn btn-outline-secondary"
+              (click)="onFieldValueChange(DEFAULT_ND)">
+        {{'SHARED.BUTTON.' + EmptyInputEnum.ND | translate}}
+      </button>
+    }
+    <button class="btn btn-outline-secondary"
+            (click)="onFieldValueChange(null)">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  }
+</div>

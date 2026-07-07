@@ -1,0 +1,33 @@
+@let id = correctId();
+<label class="disable-highlight-text" for="{{id}}">
+  {{correctTranslateKey() | translate}}{{requiredSuffix()}}
+</label>
+<div class="input-group {{sizeClass()}}">
+  @let required = isRequired();
+  @let fieldValueTmp = fieldValue();
+  @let disabled = isDisabled();
+  <input #datePicker="ngbDatepicker"
+         class="form-control border-dark"
+         [class.ng-invalid]="required && !fieldValueTmp"
+         [class.ng-valid]="required && fieldValueTmp"
+         ngbDatepicker
+         [autocomplete]="'off'"
+         [container]="'body'"
+         [disabled]="disabled"
+         [id]="id"
+         [readonly]="true"
+         [required]="required"
+         [type]="'text'"
+         [ngModel]="fieldValueTmp"
+         (ngModelChange)="onFieldValueChange($event)">
+  @if (!disabled) {
+    <button class="btn btn-outline-secondary"
+            (click)="datePicker.toggle()">
+      <i class="bi bi-calendar3"></i>
+    </button>
+    <button class="btn btn-outline-secondary"
+            (click)="onFieldValueChange(null)">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  }
+</div>

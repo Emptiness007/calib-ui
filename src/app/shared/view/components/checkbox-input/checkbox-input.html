@@ -1,0 +1,14 @@
+@let id = correctId();
+@let fieldValueTmp = fieldValue();
+@let disabled = isDisabled();
+<div class="col d-flex align-items-center">
+  <label class="form-check-label disable-highlight-text me-2" for="{{id}}">
+    {{correctTranslateKey() | translate}}{{requiredSuffix()}}
+  </label>
+  <input class="form-check-input m-0"
+         [disabled]="disabled"
+         [id]="id"
+         [type]="'checkbox'"
+         [ngModel]="fieldValueTmp"
+         (ngModelChange)="onFieldValueChange($event)">
+</div>
