@@ -5,6 +5,9 @@ import {ThemeEnum} from '../../shared/theme/theme.config';
 import {LanguageEnum, TextT} from '../../shared/translate/translate.config';
 import {RoleStore} from '../../shared/auth/model/store/role-store';
 import {NewsStore} from '../../shared/view/dialogs/news-dialog/model/store/news-store';
+import {BehaviorSubject} from 'rxjs';
+import {CalculationTypeEnum} from '../model/calculation.type.enum';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -97,5 +100,14 @@ export class EventsService {
   getNews(){
     return this.seService.getNews();
   }
+
+  private currentTab$ = new BehaviorSubject<CalculationTypeEnum>(CalculationTypeEnum.NA);
+  setCurrentTab(tab: CalculationTypeEnum){
+    this.currentTab$.next(tab);
+  }
+  getCurrentTab(){
+    return this.currentTab$.asObservable();
+  }
+
 
 }

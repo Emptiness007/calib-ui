@@ -1,7 +1,9 @@
 @use 'app/shared/theme/themes';
 
+
 @use 'bootstrap/scss/bootstrap';
 @use 'bootstrap-icons/font/bootstrap-icons';
+@import './styles/theme-overrides.scss';
 
 
 //значения по умолчанию для всего документа
@@ -175,34 +177,13 @@ thead {
 }
 
 .btn-primary {
-  background-color: var(--primary-color, #024d6c);
-  border-color: var(--primary-color, #024d6c);
-  color: var(--white-color, #ffffff);
+  background-color: var(--btn-primary-color);
+  border-color: var(--btn-primary-color);
+  color: var(--white-color);
 
   &:hover{
-    background-color: var(--dark-primary-color, #024D6C66);
-    border-color: var(--dark-primary-color, #024D6C66);
-  }
-}
-
-.btn-outline-primary {
-  color: var(--primary-color, #024d6c);
-  border-color: var(--primary-color, #024d6c);
-
-  &:hover{
-    background-color: var(--primary-color, #024d6c);
-    color: var(--white-color, #ffffff);
-    border-color: var(--primary-color, #024d6c);
-  }
-}
-
-.btn-outline-danger{
-  color: var(--red-color, red);
-  border-color: var(--red-color, red);
-
-  &:hover{
-    background-color: var(--red-color, red);
-    color: var(--white-color, #ffffff);
+    background-color: var(--btn-dark-primary-color);
+    border-color: var(--btn-dark-primary-color);
   }
 }
 

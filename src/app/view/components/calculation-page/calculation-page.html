@@ -1,0 +1,59 @@
+<div class="info-card shadow-sm">
+  <h5>{{'INFO.INPUT' | translate}}</h5>
+  <table class="table table-bordered table-sm align-middle">
+    <thead >
+    <tr>
+      @for (field of inputFieldList; track field) {
+        <th [innerHTML]="'TABLE.' + field.toUpperCase() | translate"></th>
+      }
+    </tr>
+    </thead>
+    <tbody>
+      @for(row of inputRows(); track row.stage){
+        <tr>
+          @for (property of inputFieldList; track property){
+            @if(property === 'rNomIn' || property === 'rNomOut'){
+              <td>
+                <div class="input-group ">
+                  <input class="form-control form-control-sm" type="number" placeholder="Введите значение"
+                         [value]="row[property]"/>
+                  <button class="btn btn-outline-secondary btn-sm" type="button" (click)="onReset()">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              </td>
+            } @else {
+              <td>{{row[property]}}</td>
+            }
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+  <button class="btn btn-primary btn-sm " (click)="calculateAll()">{{'BUTTON.CALCULATE' | translate}}</button>
+</div>
+
+<div class="info-card shadow-sm">
+  <h5>{{'INFO.RESULT' | translate}}</h5>
+  <table class="table table-bordered table-sm">
+    <thead class="">
+    <tr>
+      @for (field of outputFieldList; track field) {
+        <th [innerHTML]="'TABLE.' + field.toUpperCase() | translate"></th>
+      }
+    </tr>
+    </thead>
+    <tbody>
+      @for(row of outputRows(); track row.stage){
+        <tr>
+          @for (property of outputFieldList; track property){
+              <td>{{row[property]}}</td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+  <button class="btn btn-primary btn-sm " (click)="calculateAll()">{{'BUTTON.CALCULATE' | translate}}</button>
+</div>
+
+

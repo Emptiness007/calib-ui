@@ -1,5 +1,5 @@
-import {CalculationTypeEnum} from './calculation.type.enum';
-import {Angle} from './angle.interface,ts';
+import {CalculationTypeEnum} from '../calculation.type.enum';
+import {Angle} from './angle.interface';
 
 export interface CalculationOutput {
   type: CalculationTypeEnum;

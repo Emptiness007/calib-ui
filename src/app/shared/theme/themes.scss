@@ -77,9 +77,7 @@
   --tag-text-color: #1f5e7e;
 }
 
-[data-theme="dark"] {
-  --primary-color: #6f8894;
-
+body[data-theme="dark"] {
   --spinner-dot-color: var(--primary-color, #024d6c);
 }
 

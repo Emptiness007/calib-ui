@@ -1,11 +1,49 @@
 {
   "APP": {
     "INFO": "Тут будет информация о моём крутом приложении",
-    "NAME": "Расчет калибровых точек"
+    "NAME": "Расчет калибровых точек КВД"
+  },
+
+  "BUTTON": {
+    "CALCULATE": "Рассчитать"
   },
 
   "CALCULATION-TYPE": {
-    "NA": "Направляющий аппарат",
+    "NA": "Лопатка направляющего аппарата",
     "KR": "Кольцо рабочее"
+  },
+
+  "INPUT": {
+    "SELECT-TYPE": "Выберите изделие"
+  },
+
+  "OUTPUT": {
+
+  },
+
+  "INFO": {
+    "INPUT": "Входные данные",
+    "RESULT": "Результаты вычислений",
+    "CONSTANTS": "Используемые константы"
+  },
+
+  "CONSTANTS": {
+    "TOLERANCE": "Допуск X: {{value}} мм",
+    "H-SET": "Н<sub>заданное</sub>: {{value}} мм",
+    "H-MEASURED": "Н<sub>измеренное</sub>: {{value}} мм"
+  },
+
+  "TABLE": {
+    "A1": "A<sub>1</sub> (мм)",
+    "A2": "A<sub>2</sub> (мм)",
+    "STAGE": "Ступень",
+    "RNOMIN": "R<sub>ном вх</sub> (мм)",
+    "RNOMOUT": "R<sub>ном вых</sub> (мм)",
+    "RMAXIN": "R<sub>max вх</sub>",
+    "RMAXOUT": "R<sub>max вых</sub>",
+    "KPLATESIN": "K<sub>плиток вх</sub>",
+    "KPLATESOUT": "K<sub>плиток вых</sub>",
+    "ANGLE": "Угол А"
   }
+
 }

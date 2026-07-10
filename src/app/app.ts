@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {DEFAULT_LANGUAGE, LanguageEnum} from './shared/translate/translate.config';
 import {environment} from '../environments/environment';
-import {LS_APP_NAME, LS_APP_NAME_TEST} from './app.constant.config';
+import {LS_APP_NAME, LS_APP_NAME_TEST, LS_APP_TAB} from './app.constant.config';
 import {
   ID_UNDEFINED,
   ROLE_UNDEFINED,
@@ -22,6 +22,7 @@ import {ThemeService} from './shared/theme/theme.service';
 import {NewsStore} from './shared/view/dialogs/news-dialog/model/store/news-store';
 import {Spinner} from './shared/view/components/spinner/spinner/spinner';
 import {NotificationList} from './shared/view/components/notifications/notification-list/notification-list';
+import {CalculationTypeEnum} from './data/model/calculation.type.enum';
 
 @Component({
   selector: 'app-root',
@@ -85,6 +86,7 @@ export class App implements OnInit{
         this._resetLS();
         this._exitApp();
         this._changeUser();
+        this._changeTab();
       });
   }
   //получение имени локального хранилища
@@ -166,6 +168,14 @@ export class App implements OnInit{
       });
   }
 
+  _changeTab(){
+    this.eService.getCurrentTab()
+      .pipe(takeUntilDestroyed(this.unsubscribeAfterDestroy))
+      .subscribe(tab => {
+        this.lsService.addPropertyLS(this.lSName!, LocalStorageEnum.ACTIVE_TAB, tab);
+      })
+  }
+
   //чтение переменных из локального хранилища
   initLSValues() {
     let lsPropertyParse: any = this.lsService.getLS(this.lSName);
@@ -185,6 +195,10 @@ export class App implements OnInit{
     const appVersionLS = lsPropertyParse[LocalStorageEnum.APP_VERSION];
     const appVersion = appVersionLS ? appVersionLS : DEFAULT_APP_VERSION;
     this.eService.setUserAppVersion(appVersion);
+
+    const currentTabLS = lsPropertyParse[LocalStorageEnum.ACTIVE_TAB];
+    const currentTab = currentTabLS ? currentTabLS : CalculationTypeEnum.NA;
+    this.eService.setCurrentTab(currentTab);
 
     //инициализация начальной роли пользователя приложения
     const userRoleLS = lsPropertyParse[LocalStorageEnum.USER_ROLE];

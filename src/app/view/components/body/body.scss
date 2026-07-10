@@ -1,0 +1,17 @@
+.nav-link {
+  border: 2px solid var(--primary-color, #024d6c);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: var(--ligth-smoke-white-color, #f7f7f7);
+  color: var(--primary-color, #024d6c);
+}
+
+.nav-link.active {
+  background-color: var(--primary-color, #024d6c);
+  color: var(--white-color, #ffffff);
+  font-weight: 500;
+}

@@ -1,0 +1,11 @@
+[data-theme="standard"] {
+  --info-card-background: #f4f6f8;
+  --btn-primary-color: var(--primary-color);
+  --btn-dark-primary-color: var(--dark-primary-color)
+}
+
+
+[data-theme="dark"] {
+  --info-card-background: var(--white-color);
+  --btn-primary-color: var(--light-grey-color);
+}

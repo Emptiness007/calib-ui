@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
-import {Angle} from '../model/angle.interface,ts';
+import {Angle} from '../model/interface/angle.interface';
 
 @Service()
 export class AngleConverterService {
