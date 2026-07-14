@@ -3,6 +3,7 @@ import {Angle} from './angle.interface';
 
 export interface CalculationOutput {
   type: CalculationTypeEnum;
+  stage: number;
   rMaxIn: number; // Rmax вх (мм) — всегда
   rMaxOut: number; // Rmax вых (мм) — для NA 4-6 и KR 4-7
   kCarriage: number; //Ккаретки

@@ -3,7 +3,13 @@ import { RouterOutlet } from '@angular/router';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {DEFAULT_LANGUAGE, LanguageEnum} from './shared/translate/translate.config';
 import {environment} from '../environments/environment';
-import {LS_APP_NAME, LS_APP_NAME_TEST, LS_APP_TAB} from './app.constant.config';
+import {
+  LS_APP_NAME,
+  LS_APP_NAME_TEST,
+  LS_APP_TAB,
+  LS_RESULT_DATA,
+  LS_STEP_DATA
+} from './app.constant.config';
 import {
   ID_UNDEFINED,
   ROLE_UNDEFINED,
@@ -87,6 +93,8 @@ export class App implements OnInit{
         this._exitApp();
         this._changeUser();
         this._changeTab();
+        this._changeStepData();
+        this._changeResultData();
       });
   }
   //получение имени локального хранилища
@@ -172,7 +180,23 @@ export class App implements OnInit{
     this.eService.getCurrentTab()
       .pipe(takeUntilDestroyed(this.unsubscribeAfterDestroy))
       .subscribe(tab => {
-        this.lsService.addPropertyLS(this.lSName!, LocalStorageEnum.ACTIVE_TAB, tab);
+        this.lsService.addPropertyLS(this.lSName!, LS_APP_TAB, tab);
+      })
+  }
+
+  _changeStepData(){
+    this.eService.getStepData()
+      .pipe(takeUntilDestroyed(this.unsubscribeAfterDestroy))
+      .subscribe(data =>{
+        this.lsService.addPropertyLS(this.lSName!, LS_STEP_DATA, data);
+      })
+  }
+
+  _changeResultData(){
+    this.eService.getResultData()
+      .pipe(takeUntilDestroyed(this.unsubscribeAfterDestroy))
+      .subscribe(data => {
+        this.lsService.addPropertyLS(this.lSName!, LS_RESULT_DATA, data);
       })
   }
 
@@ -196,7 +220,8 @@ export class App implements OnInit{
     const appVersion = appVersionLS ? appVersionLS : DEFAULT_APP_VERSION;
     this.eService.setUserAppVersion(appVersion);
 
-    const currentTabLS = lsPropertyParse[LocalStorageEnum.ACTIVE_TAB];
+    //инициализация активной вкладки в приложении
+    const currentTabLS = lsPropertyParse[LS_APP_TAB];
     const currentTab = currentTabLS ? currentTabLS : CalculationTypeEnum.NA;
     this.eService.setCurrentTab(currentTab);
 
@@ -210,6 +235,16 @@ export class App implements OnInit{
       userRole = userRoleTmp ? userRoleTmp : this.currentUser.roleSetForApp[0];
     }
     this.eService.setCurrentRole(userRole);
+
+    //инициализация входных данных
+    const stepInputDataLS = lsPropertyParse[LS_STEP_DATA];
+    const stepInputData = stepInputDataLS ? stepInputDataLS : [];
+    this.eService.setStepData(stepInputData);
+
+    //инициализация результатов вычислений
+    const stepResultDataLS = lsPropertyParse[LS_RESULT_DATA];
+    const stepResultData = stepResultDataLS ? stepResultDataLS : [];
+    this.eService.setResultData(stepResultData);
   }
 
 

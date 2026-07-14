@@ -23,12 +23,12 @@ calculate(input: CalculationInput): CalculationOutput{
   const a2 = getHeightA2(input.type, input.stage);
   const { baseOffset, hSet, hMeasured } = getPhysicalConstants();
 
-  const rMaxIn = rNomIn + x;
-  const rMaxOut = rNomOut + x;
+  const rMaxIn = this.round(rNomIn + x, 2);
+  const rMaxOut = this.round(rNomOut + x,2);
 
-  const kCarriage = hSet - hMeasured;
-  const kPlatesIn = rNomIn - baseOffset + kCarriage;
-  const kPlatesOut = rNomOut - baseOffset + kCarriage;
+  const kCarriage = this.round(hSet - hMeasured, 4);
+  const kPlatesIn = this.round(rNomIn - baseOffset + kCarriage, 4);
+  const kPlatesOut = this.round(rNomOut - baseOffset + kCarriage, 4);
 
   let angle = { degrees: 0, minutes: 0, seconds: 0, decimal: 0 };
   if (hasAngleCalculation(type, stage)) {
@@ -39,6 +39,7 @@ calculate(input: CalculationInput): CalculationOutput{
 
   return {
     type,
+    stage,
     rMaxIn,
     rMaxOut,
     kCarriage,
@@ -46,6 +47,11 @@ calculate(input: CalculationInput): CalculationOutput{
     kPlatesOut,
     angle
   }
+}
+
+private round(num: number, decimals: number){
+  const factor = Math.pow(10, decimals);
+  return Math.round(num * factor) / factor;
 }
 
 }

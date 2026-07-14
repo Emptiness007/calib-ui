@@ -7,12 +7,18 @@ import {RoleStore} from '../../shared/auth/model/store/role-store';
 import {NewsStore} from '../../shared/view/dialogs/news-dialog/model/store/news-store';
 import {BehaviorSubject} from 'rxjs';
 import {CalculationTypeEnum} from '../model/calculation.type.enum';
+import {StepInputData} from '../model/step-input-data';
+import {StepResultData} from '../model/step-result-data';
+import {LocalStorageService} from '../../shared/local-storage/local-storage.service';
+import {LS_RESULT_DATA, LS_STEP_DATA} from '../../app.constant.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventsService {
   private seService = inject(SharedEventsService);
+  private lsService = inject(LocalStorageService);
+
   //текущий пользователь
   setCurrentUser(user: UserStore) {
     this.seService.setCurrentUser(user);
@@ -101,6 +107,7 @@ export class EventsService {
     return this.seService.getNews();
   }
 
+  //текущая вкладка
   private currentTab$ = new BehaviorSubject<CalculationTypeEnum>(CalculationTypeEnum.NA);
   setCurrentTab(tab: CalculationTypeEnum){
     this.currentTab$.next(tab);
@@ -109,5 +116,21 @@ export class EventsService {
     return this.currentTab$.asObservable();
   }
 
+  //входные данные для изделия
+  private stepData$ = new BehaviorSubject<StepInputData[]>([]);
+  setStepData(data: StepInputData[]){
+    this.stepData$.next(data);
+  }
+  getStepData(){
+    return this.stepData$.asObservable();
+  }
 
+  //результаты вычислений для изделия
+  private resultData$ = new BehaviorSubject<StepResultData[]>([]);
+  setResultData(result: StepResultData[]){
+    this.resultData$.next(result);
+  }
+  getResultData(){
+    return this.resultData$.asObservable();
+  }
 }
