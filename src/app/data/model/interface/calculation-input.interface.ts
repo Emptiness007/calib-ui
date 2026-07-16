@@ -1,4 +1,4 @@
-import {CalculationTypeEnum} from '../calculation.type.enum';
+import {CalculationTypeEnum} from '../../constant/calculation.type.enum';
 
 export interface CalculationInput {
   type: CalculationTypeEnum; //тип изделия

@@ -1,78 +1,118 @@
+
 <div class="info-card shadow-sm">
   <div class="d-flex justify-content-between align-items-center mb-2">
-    <h5 class="fw-semibold">{{'INFO.INPUT' | translate}}</h5>
-    <button class="btn btn-secondary btn-sm" (click)="clearAllInput()">{{"SHARED.BUTTON.CLEAR" | translate}}</button>
+    <h5 class="fw-semibold">{{ 'INFO.INPUT' | translate }}</h5>
+    <button
+      class="btn btn-secondary btn-sm"
+      (click)="clearAllInput()"
+      type="button">
+      {{ 'SHARED.BUTTON.CLEAR' | translate }}
+    </button>
   </div>
 
-  <table class="table table-bordered table-sm align-middle">
-    <thead>
-    <tr>
-      @for (field of inputFieldList; track field) {
-        <th [innerHTML]="'TABLE.' + field.toUpperCase() | translate"></th>
-      }
-    </tr>
-    </thead>
-    <tbody>
-      @for(row of inputRows(); let i = $index; track row.stage){
-        <tr>
-          @for (property of inputFieldList; track property){
-            @if(property === INPUT_TABLE_FIELDS.R_NOM_IN || property === INPUT_TABLE_FIELDS.R_NOM_OUT){
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm align-middle">
+      <thead>
+      <tr>
+        @for (field of inputFieldList(); track field) {
+          <th [innerHTML]="'TABLE.' + field.toUpperCase() | translate"></th>
+        }
+      </tr>
+      </thead>
+      <tbody>
+        @for (row of inputRows(); track row.stage; let i = $index) {
+          <tr>
+            @for (property of inputFieldList(); track property) {
               <td>
-                <div class="input-group">
-                  <input class="form-control form-control-sm" type="number" min="0" step="0.1" placeholder="Введите значение"
-                         [value]="row[property]"
-                         (input)="updateCell(i, property, $any($event.target).value)"/>
-                  <button class="btn btn-outline-secondary btn-sm" type="button" (click)="updateCell(i, property, '')">
-                    <i class="bi bi-x-lg"></i>
-                  </button>
-                </div>
-              </td>
-            } @else {
-              <td>{{row[property]}}</td>
-            }
-          }
-        </tr>
-      }
-    </tbody>
-  </table>
-  <button class="btn btn-primary btn-sm " [disabled]="!canCalculate()" (click)="calculateAll()">{{'BUTTON.CALCULATE' | translate}}</button>
-</div>
-
-<div class="info-card shadow-sm">
-  <h6 class="fw-semibold">{{'INFO.CONSTANTS' | translate}}</h6>
-  <div class="d-flex flex-row gap-5 flex-wrap">
-    <span [innerHTML]="'CONSTANTS.TOLERANCE' | translate: {value: getTolerance(izdelieType())}"></span>
-    <span [innerHTML]="'CONSTANTS.H-SET' | translate: {value: getPhysicalConstants().hSet}"></span>
-    <span [innerHTML]="'CONSTANTS.H-MEASURED' | translate: {value: getPhysicalConstants().hMeasured}"></span>
-  </div>
-</div>
-
-<div class="info-card shadow-sm">
-  <h5 class="fw-semibold">{{'INFO.RESULT' | translate}}</h5>
-  <table class="table table-bordered table-sm align-middle">
-    <thead>
-    <tr>
-      @for (field of outputFieldList; track field) {
-        <th [innerHTML]="'TABLE.' + field.toUpperCase() | translate"></th>
-      }
-    </tr>
-    </thead>
-    <tbody>
-      @for(row of outputRows(); track row.stage){
-        <tr>
-          @for (property of outputFieldList; track property){
-              <td>
-                @if (property === OUTPUT_TABLE_FIELDS.ANGLE) {
-                  {{ formatAngle(row.angle) }}
+                @if (property === INPUT_FIELDS.R_NOM_IN || property === INPUT_FIELDS.R_NOM_OUT) {
+                  @if (shouldShowInputField(row.stage, property)) {
+                    <div class="input-group input-group-sm">
+                      <input
+                        class="form-control form-control-sm"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                        [placeholder]="'INPUT.PLACEHOLDER' | translate"
+                        [value]="row[property]"
+                        (input)="updateCell(i, property, $any($event.target).value)"
+                        aria-label="{{ 'TABLE.' + property.toUpperCase() | translate }}"
+                      />
+                      <button
+                        class="btn btn-outline-secondary btn-sm"
+                        type="button"
+                        (click)="updateCell(i, property, '')"
+                        aria-label="{{ 'SHARED.BUTTON.CLEAR' | translate }}">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
                 } @else {
-                  {{ row[property] }}
+                  <span>{{ row[property] }}</span>
                 }
               </td>
-          }
-        </tr>
-      }
-    </tbody>
-  </table>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <button
+    class="btn btn-primary btn-sm"
+    [disabled]="!canCalculate()"
+    (click)="calculateAll()"
+    type="button">
+    {{ 'BUTTON.CALCULATE' | translate }}
+  </button>
 </div>
 
+<div class="info-card shadow-sm">
+  <h6 class="fw-semibold">{{ 'INFO.CONSTANTS' | translate }}</h6>
+  <div class="d-flex flex-row gap-5 flex-wrap">
+    <span [innerHTML]="'CONSTANTS.TOLERANCE' | translate: { value: getTolerance(izdelieType()) }"></span>
+    <span [innerHTML]="'CONSTANTS.H-SET' | translate: { value: getPhysicalConstants().hSet }"></span>
+    <span [innerHTML]="'CONSTANTS.H-MEASURED' | translate: { value: getPhysicalConstants().hMeasured }"></span>
+  </div>
+</div>
 
+<div class="info-card shadow-sm">
+  <h5 class="fw-semibold">{{ 'INFO.RESULT' | translate }}</h5>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm align-middle">
+      <thead>
+      <tr>
+        @for (field of outputFieldList(); track field) {
+          <th [innerHTML]="'TABLE.' + field.toUpperCase() | translate"></th>
+        }
+      </tr>
+      </thead>
+      <tbody>
+        @for (row of outputRows(); track row.stage) {
+          <tr>
+            @for (property of outputFieldList(); track property) {
+              <td>
+                @if (isSpecialCaseStage(izdelieType(), row.stage)) {
+                  @if (shouldShowOutputField(row.stage, property)) {
+                    <span>{{ row[property] }}</span>
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
+                } @else {
+                  @if (property === OUTPUT_FIELDS.ANGLE) {
+                    <span>{{ formatAngle(row.angle!) }}</span>
+                  } @else {
+                    <span>{{ row[property] }}</span>
+                  }
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <button class="btn btn-success" [disabled]="!calculateIsDone()" (click)="getReport()">{{"SHARED.BUTTON.REPORT" | translate}}</button>
+</div>

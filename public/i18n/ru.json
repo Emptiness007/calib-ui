@@ -14,7 +14,8 @@
   },
 
   "INPUT": {
-    "SELECT-TYPE": "Выберите изделие"
+    "SELECT-TYPE": "Выберите изделие",
+    "PLACEHOLDER": "Введите значение"
   },
 
   "OUTPUT": {

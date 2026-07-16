@@ -28,7 +28,7 @@ import {ThemeService} from './shared/theme/theme.service';
 import {NewsStore} from './shared/view/dialogs/news-dialog/model/store/news-store';
 import {Spinner} from './shared/view/components/spinner/spinner/spinner';
 import {NotificationList} from './shared/view/components/notifications/notification-list/notification-list';
-import {CalculationTypeEnum} from './data/model/calculation.type.enum';
+import {CalculationTypeEnum} from './data/constant/calculation.type.enum';
 
 @Component({
   selector: 'app-root',
@@ -221,9 +221,8 @@ export class App implements OnInit{
     this.eService.setUserAppVersion(appVersion);
 
     //инициализация активной вкладки в приложении
-    const currentTabLS = lsPropertyParse[LS_APP_TAB];
-    const currentTab = currentTabLS ? currentTabLS : CalculationTypeEnum.NA;
-    this.eService.setCurrentTab(currentTab);
+    const currentTabLS = lsPropertyParse[LS_APP_TAB] || CalculationTypeEnum.NA;
+    this.eService.setCurrentTab(currentTabLS);
 
     //инициализация начальной роли пользователя приложения
     const userRoleLS = lsPropertyParse[LocalStorageEnum.USER_ROLE];

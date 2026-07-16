@@ -6,18 +6,15 @@ import {LanguageEnum, TextT} from '../../shared/translate/translate.config';
 import {RoleStore} from '../../shared/auth/model/store/role-store';
 import {NewsStore} from '../../shared/view/dialogs/news-dialog/model/store/news-store';
 import {BehaviorSubject} from 'rxjs';
-import {CalculationTypeEnum} from '../model/calculation.type.enum';
+import {CalculationTypeEnum} from '../constant/calculation.type.enum';
 import {StepInputData} from '../model/step-input-data';
 import {StepResultData} from '../model/step-result-data';
-import {LocalStorageService} from '../../shared/local-storage/local-storage.service';
-import {LS_RESULT_DATA, LS_STEP_DATA} from '../../app.constant.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventsService {
   private seService = inject(SharedEventsService);
-  private lsService = inject(LocalStorageService);
 
   //текущий пользователь
   setCurrentUser(user: UserStore) {
@@ -133,4 +130,5 @@ export class EventsService {
   getResultData(){
     return this.resultData$.asObservable();
   }
+
 }

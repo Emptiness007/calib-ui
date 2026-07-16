@@ -1,5 +1,5 @@
-import {CalculationTypeEnum} from '../model/calculation.type.enum';
-import {IzdelieConfig} from '../model/izdelie-config';
+import {CalculationTypeEnum} from './calculation.type.enum';
+import {IzdelieConfig} from './izdelie-config';
 
 // ==================== Интерфейсы ====================
 export interface HeightConstants {
@@ -40,8 +40,8 @@ export const PHYSICAL_CONSTANTS = {
 };
 
 export const TRANSLATE_KEY: Record<CalculationTypeEnum, string> = {
-  [CalculationTypeEnum.NA]: 'CALCULATION.TYPE.NA',
-  [CalculationTypeEnum.KR]: 'CALCULATION.TYPE.KR'
+  [CalculationTypeEnum.NA]: 'CALCULATION-TYPE.NA',
+  [CalculationTypeEnum.KR]: 'CALCULATION-TYPE.KR'
 }
 
 

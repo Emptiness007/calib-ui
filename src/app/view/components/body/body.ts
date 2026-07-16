@@ -1,5 +1,5 @@
 import {Component, DestroyRef, inject, signal} from '@angular/core';
-import {CalculationTypeEnum} from '../../../data/model/calculation.type.enum';
+import {CalculationTypeEnum} from '../../../data/constant/calculation.type.enum';
 
 import {EventsService} from '../../../data/service/events.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

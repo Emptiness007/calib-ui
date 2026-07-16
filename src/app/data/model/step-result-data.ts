@@ -1,6 +1,6 @@
 import {Angle} from './interface/angle.interface';
 export class StepResultData {
-  stage?: number;
+  stage!: number;
   rMaxIn?: number;
   rMaxOut?: number;
   kPlatesIn?: number;
