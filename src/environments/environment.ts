@@ -2,8 +2,8 @@ export const environment = {
   auth: false,
   production: false,
   test: true,
-  frontendURL: "https://localhost:4200",
-  backendURL: "https://localhost:3333",
-  authURL: 'https://localhost:3333/api',
-  loginUrl: 'https://localhost:3333',
+  frontendURL: "http://localhost:4200",
+  backendURL: "http://localhost:3000",
+  authURL: 'http://localhost:3333/api',
+  loginUrl: 'http://localhost:3333',
 };

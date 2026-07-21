@@ -8,6 +8,8 @@
     "build-auth": "ng build --configuration bazis2-auth --base-href=/filestorage/",
     "build-test": "ng build --configuration testbazis --base-href=/filestorage/",
     "build-test-auth": "ng build --configuration testbazis-auth --base-href=/filestorage/",
+    "server": "node server/index.js",
+    "dev": "concurrently \"npm run start\" \"npm run server\"",
     "t-update": "ngx-translate-extract --input ./src --output public/i18n/ru.json public/i18n/en.json --sort --format namespaced-json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -28,11 +30,14 @@
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "class-transformer": "^0.5.1",
+    "concurrently": "^10.0.3",
     "exceljs": "^4.4.0",
+    "express": "^5.2.1",
     "ngx-filesaver": "^21.0.0",
     "ngx-translate-multi-http-loader": "^20.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "uuid": "^11.1.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
