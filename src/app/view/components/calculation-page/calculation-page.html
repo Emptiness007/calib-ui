@@ -1,13 +1,6 @@
-
-<div class="info-card shadow-sm">
-  <div class="d-flex justify-content-between align-items-center mb-2">
+<div class="info-card  shadow-sm">
+  <div class="d-flex justify-content-center mb-2">
     <h5 class="fw-semibold">{{ 'INFO.INPUT' | translate }}</h5>
-    <button
-      class="btn btn-secondary btn-sm"
-      (click)="clearAllInput()"
-      type="button">
-      {{ 'SHARED.BUTTON.CLEAR' | translate }}
-    </button>
   </div>
 
   <div class="table-responsive">
@@ -25,7 +18,9 @@
             @for (property of inputFieldList(); track property) {
               <td>
                 @if (property === INPUT_FIELDS.R_NOM_IN || property === INPUT_FIELDS.R_NOM_OUT) {
-                  @if (shouldShowInputField(row.stage, property)) {
+                  @if (property === INPUT_FIELDS.R_NOM_OUT && isSpecialStage(row.stage)) {
+                    <span class="text-muted">—</span>
+                  } @else {
                     <div class="input-group input-group-sm">
                       <input
                         class="form-control form-control-sm"
@@ -45,8 +40,6 @@
                         <i class="bi bi-x-lg"></i>
                       </button>
                     </div>
-                  } @else {
-                    <span class="text-muted">—</span>
                   }
                 } @else {
                   <span>{{ row[property] }}</span>
@@ -59,27 +52,42 @@
     </table>
   </div>
 
-  <button
-    class="btn btn-primary btn-sm"
-    [disabled]="!canCalculate()"
-    (click)="calculateAll()"
-    type="button">
-    {{ 'BUTTON.CALCULATE' | translate }}
-  </button>
+  <div class="d-flex flex-row justify-content-end gap-2">
+    <button
+      class="btn btn-primary btn-sm"
+      [disabled]="!canCalculate()"
+      (click)="calculateAll()"
+      type="button">
+      {{ 'BUTTON.CALCULATE' | translate }}
+    </button>
+    <button
+      class="btn btn-secondary btn-sm"
+      (click)="clearAllInput()"
+      type="button">
+      {{ 'SHARED.BUTTON.CLEAR' | translate }}
+    </button>
+  </div>
+
 </div>
 
-<div class="info-card shadow-sm">
-  <h6 class="fw-semibold">{{ 'INFO.CONSTANTS' | translate }}</h6>
+<div class="info-card  shadow-sm">
+  <div class="d-flex justify-content-center mb-2">
+    <h6 class="fw-semibold">{{ 'INFO.CONSTANTS' | translate }}</h6>
+  </div>
   <div class="d-flex flex-row gap-5 flex-wrap">
-    <span [innerHTML]="'CONSTANTS.TOLERANCE' | translate: { value: getTolerance(izdelieType()) }"></span>
-    <span [innerHTML]="'CONSTANTS.H-SET' | translate: { value: getPhysicalConstants().hSet }"></span>
-    <span [innerHTML]="'CONSTANTS.H-MEASURED' | translate: { value: getPhysicalConstants().hMeasured }"></span>
+    @if (currentIzdelie()) {
+      <span [innerHTML]="'CONSTANTS.TOLERANCE' | translate: { value: currentIzdelie()!.tolerance }"></span>
+      <span [innerHTML]="'CONSTANTS.H-SET' | translate: { value: currentIzdelie()!.physicalConstants.hSet }"></span>
+      <span [innerHTML]="'CONSTANTS.H-MEASURED' | translate: { value: currentIzdelie()!.physicalConstants.hMeasured }"></span>
+      <span [innerHTML]="'CONSTANTS.PROTOCOL' | translate: { value: currentIzdelie()!.physicalConstants.protocolNumber }"></span>
+    }
   </div>
 </div>
 
 <div class="info-card shadow-sm">
-  <h5 class="fw-semibold">{{ 'INFO.RESULT' | translate }}</h5>
-
+  <div class="d-flex justify-content-center mb-2">
+    <h5 class="fw-semibold">{{ 'INFO.RESULT' | translate }}</h5>
+  </div>
   <div class="table-responsive">
     <table class="table table-bordered table-sm align-middle">
       <thead>
@@ -94,8 +102,8 @@
           <tr>
             @for (property of outputFieldList(); track property) {
               <td>
-                @if (isSpecialCaseStage(izdelieType(), row.stage)) {
-                  @if (shouldShowOutputField(row.stage, property)) {
+                @if (isSpecialStage(row.stage)) {
+                  @if (property !== OUTPUT_FIELDS.R_MAX_OUT && property !== OUTPUT_FIELDS.K_PLATES_OUT && property !== OUTPUT_FIELDS.ANGLE) {
                     <span>{{ row[property] }}</span>
                   } @else {
                     <span class="text-muted">—</span>

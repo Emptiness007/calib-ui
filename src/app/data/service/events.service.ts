@@ -6,9 +6,9 @@ import {LanguageEnum, TextT} from '../../shared/translate/translate.config';
 import {RoleStore} from '../../shared/auth/model/store/role-store';
 import {NewsStore} from '../../shared/view/dialogs/news-dialog/model/store/news-store';
 import {BehaviorSubject} from 'rxjs';
-import {CalculationTypeEnum} from '../constant/calculation.type.enum';
 import {StepInputData} from '../model/step-input-data';
 import {StepResultData} from '../model/step-result-data';
+import {IzdelieConfigData} from '../model/izdelie-data.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -104,13 +104,14 @@ export class EventsService {
     return this.seService.getNews();
   }
 
-  //текущая вкладка
-  private currentTab$ = new BehaviorSubject<CalculationTypeEnum>(CalculationTypeEnum.NA);
-  setCurrentTab(tab: CalculationTypeEnum){
-    this.currentTab$.next(tab);
+  //текущее выбранное изделие
+  // @ts-ignore
+  private currentIzdelie$ = new BehaviorSubject<IzdelieConfigData | null>(null);
+  setCurrentIzdelie(izdelie: IzdelieConfigData){
+    this.currentIzdelie$.next(izdelie);
   }
-  getCurrentTab(){
-    return this.currentTab$.asObservable();
+  getCurrentIzdelie(){
+    return this.currentIzdelie$.asObservable();
   }
 
   //входные данные для изделия

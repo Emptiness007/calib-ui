@@ -31,6 +31,7 @@
     "bootstrap-icons": "^1.13.1",
     "class-transformer": "^0.5.1",
     "concurrently": "^10.0.3",
+    "cors": "^2.8.6",
     "exceljs": "^4.4.0",
     "express": "^5.2.1",
     "ngx-filesaver": "^21.0.0",

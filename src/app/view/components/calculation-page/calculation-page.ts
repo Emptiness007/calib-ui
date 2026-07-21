@@ -2,25 +2,32 @@ import {Component, computed, DestroyRef, effect, inject, input, OnInit, signal, 
 import {TranslatePipe} from '@ngx-translate/core';
 import {StepInputData} from '../../../data/model/step-input-data';
 import {StepResultData} from '../../../data/model/step-result-data';
-import {CalculationTypeEnum} from '../../../data/constant/calculation.type.enum';
 import {CalculationService} from '../../../data/service/calculation.service';
-import {
-  getHeightA1,
-  getHeightA2,
-  getPhysicalConstants,
-  getTolerance
-} from '../../../data/constant/calculation-constants';
+import {IzdelieConfigService} from '../../../data/service/izdelie-config.service';
+import {IzdelieConfigData} from '../../../data/model/izdelie-data.interface';
 import {EventsService} from '../../../data/service/events.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {
-  getDisplayFields, getOutputFields,
-  getRequiredFields,
-  getStagesByConfig,
-  INPUT_FIELDS, isSpecialCaseStage, OUTPUT_FIELDS
-} from '../../../data/constant/calculation-stage.config';
 import {Angle} from '../../../data/model/interface/angle.interface';
 import {ExcelExportService} from '../../../data/service/excel-export.service';
-import {saveAs} from 'file-saver';
+
+
+export const INPUT_FIELDS = {
+  STAGE: 'stage',
+  A1: 'a1',
+  A2: 'a2',
+  R_NOM_IN: 'rNomIn',
+  R_NOM_OUT: 'rNomOut',
+} as const;
+
+export const OUTPUT_FIELDS = {
+  STAGE: 'stage',
+  R_MAX_IN: 'rMaxIn',
+  R_MAX_OUT: 'rMaxOut',
+  K_CARRIAGE: 'kCarriage',
+  K_PLATES_IN: 'kPlatesIn',
+  K_PLATES_OUT: 'kPlatesOut',
+  ANGLE: 'angle',
+} as const;
 
 @Component({
   selector: 'app-calculation-page',
@@ -30,42 +37,60 @@ import {saveAs} from 'file-saver';
   templateUrl: './calculation-page.html',
   styleUrl: './calculation-page.scss',
 })
-export class CalculationPage implements OnInit{
+export class CalculationPage implements OnInit {
   private readonly calculationService = inject(CalculationService);
-  private readonly eventsService= inject(EventsService);
+  private readonly izdelieConfigService = inject(IzdelieConfigService);
+  private readonly eventsService = inject(EventsService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly excelExportService = inject(ExcelExportService);
 
-  izdelieType = input.required<CalculationTypeEnum>();
+  // Входные параметры: sectionId и izdelieId
+  sectionId = input.required<string>();
+  izdelieId = input.required<string>();
+
   inputRows = signal<StepInputData[]>([]);
   outputRows = signal<StepResultData[]>([]);
   canCalculate = signal<boolean>(false);
   calculateIsDone = signal<boolean>(false);
 
+  // Текущая конфигурация изделия
+  protected currentIzdelie = signal<IzdelieConfigData | null>(null);
+
+  // Список полей ввода
   readonly inputFieldList = computed(() => {
-    const stages = this.stageList();
-    if (stages.length === 0) return [];
-    return getDisplayFields(this.izdelieType(), stages[0]);
+    return [
+      INPUT_FIELDS.STAGE,
+      INPUT_FIELDS.A1,
+      INPUT_FIELDS.A2,
+      INPUT_FIELDS.R_NOM_IN,
+      INPUT_FIELDS.R_NOM_OUT
+    ];
   });
 
+  // Список полей вывода
   readonly outputFieldList = computed(() => {
-    const stages = this.stageList();
-    if (stages.length === 0) return [];
-    return getOutputFields(this.izdelieType(), stages[0]);
+    return [
+      OUTPUT_FIELDS.STAGE,
+      OUTPUT_FIELDS.R_MAX_IN,
+      OUTPUT_FIELDS.R_MAX_OUT,
+      OUTPUT_FIELDS.K_PLATES_IN,
+      OUTPUT_FIELDS.K_PLATES_OUT,
+      OUTPUT_FIELDS.ANGLE
+    ];
   });
 
   private readonly stageList = computed(() => {
-    return getStagesByConfig(this.izdelieType(), () => true);
+    const izdelie = this.currentIzdelie();
+    return izdelie ? izdelie.stages : [];
   });
 
   constructor() {
     effect(() => {
-      this.izdelieType();
+      this.sectionId();
+      this.izdelieId();
 
       untracked(() => {
-        this.initializeData();
-        this.eventsService.setStepData([]);
-        this.eventsService.setResultData([]);
+        this.loadIzdelieData();
       });
     });
   }
@@ -74,12 +99,32 @@ export class CalculationPage implements OnInit{
     //this.setupSubscriptions();
   }
 
-  private initializeData(): void {
-    const stages = this.stageList();
+  private loadIzdelieData(): void {
+    const section = this.izdelieConfigService.getSectionById(this.sectionId());
+    if (!section) {
+      console.error(`Section ${this.sectionId()} not found`);
+      return;
+    }
+
+    const izdelie = section.izdelies.find(i => i.id === this.izdelieId());
+    if (!izdelie) {
+      console.error(`Izdelie ${this.izdelieId()} not found in section ${this.sectionId()}`);
+      return;
+    }
+
+    this.currentIzdelie.set(izdelie);
+    this.initializeData(izdelie);
+  }
+
+  private initializeData(izdelie: IzdelieConfigData): void {
+    const stages = izdelie.stages;
     const rows = stages.map(stage => {
-      const a1 = getHeightA1(this.izdelieType(), stage);
-      const a2 = getHeightA2(this.izdelieType(), stage);
-      return new StepInputData(stage, a1, a2);
+      const stageKey = stage.toString();
+      const heightConstants = izdelie.heightConstants[stageKey];
+      const a1 = heightConstants?.a1 ?? 0;
+      const a2 = heightConstants?.a2 ?? 0;
+
+      return new StepInputData(this.sectionId(), this.izdelieId(), stage, a1, a2);
     });
 
     this.inputRows.set(rows);
@@ -88,60 +133,73 @@ export class CalculationPage implements OnInit{
     this.updateCanCalculate();
   }
 
-  private setupSubscriptions(): void {
-    this.eventsService.getStepData()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(data => {
-        if (data?.length) {
-          this.inputRows.set(data);
-          this.updateCanCalculate();
-        }
-      });
-
-    this.eventsService.getResultData()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(data => {
-        if (data) {
-          this.outputRows.set(data);
-        }
-      });
-  }
-
   calculateAll(): void {
-    const type = this.izdelieType();
+    const izdelie = this.currentIzdelie();
+    if (!izdelie) return;
 
     const results = this.inputRows().map(row => {
-      const required = getRequiredFields(type, row.stage);
+      // Проверяем специальные ступени
+      if (izdelie.specialStages.includes(row.stage)) {
+        // Для специальных ступеней нужен только rNomIn
+        if (!this.hasValue(row.rNomIn)) return new StepResultData();
 
-      const needIn = required.includes(INPUT_FIELDS.R_NOM_IN);
-      const needOut = required.includes(INPUT_FIELDS.R_NOM_OUT);
+        const payload = {
+          sectionId: this.sectionId(),
+          izdelieId: this.izdelieId(),
+          stage: row.stage,
+          rNomIn: Number(row.rNomIn),
+          rNomOut: NaN
+        };
 
-      if (needIn && !this.hasValue(row.rNomIn)) return { stage: row.stage };
-      if (needOut && !this.hasValue(row.rNomOut)) return { stage: row.stage };
+        const result = this.calculationService.calculate(payload, izdelie);
+        const resultData = new StepResultData();
+        resultData.sectionId = result.sectionId;
+        resultData.izdelieId = result.izdelieId;
+        resultData.stage = result.stage;
+        resultData.rMaxIn = result.rMaxIn;
+        resultData.kCarriage = result.kCarriage;
+        resultData.kPlatesIn = result.kPlatesIn;
+        return resultData;
+      } else {
+        // Для обычных ступеней нужны оба значения
+        if (!this.hasValue(row.rNomIn) || !this.hasValue(row.rNomOut)) {
+          return new StepResultData();
+        }
 
-      const rNomIn = needIn ? Number(row.rNomIn) : NaN;
-      const rNomOut = needOut ? Number(row.rNomOut) : NaN;
+        const rNomIn = Number(row.rNomIn);
+        const rNomOut = Number(row.rNomOut);
 
-      if (needIn && !this.isValidNumber(rNomIn)) return { stage: row.stage };
-      if (needOut && !this.isValidNumber(rNomOut)) return { stage: row.stage };
+        if (!this.isValidNumber(rNomIn) || !this.isValidNumber(rNomOut)) {
+          return new StepResultData();
+        }
 
-      const payload: any = {
-        type,
-        stage: row.stage,
-      };
+        const payload = {
+          sectionId: this.sectionId(),
+          izdelieId: this.izdelieId(),
+          stage: row.stage,
+          rNomIn,
+          rNomOut
+        };
 
-      if (needIn) payload.rNomIn = rNomIn;
-      if (needOut) payload.rNomOut = rNomOut;
-
-      return this.calculationService.calculate(payload);
+        const result = this.calculationService.calculate(payload, izdelie);
+        const resultData = new StepResultData();
+        resultData.sectionId = result.sectionId;
+        resultData.izdelieId = result.izdelieId;
+        resultData.stage = result.stage;
+        resultData.rMaxIn = result.rMaxIn;
+        resultData.rMaxOut = result.rMaxOut;
+        resultData.kCarriage = result.kCarriage;
+        resultData.kPlatesIn = result.kPlatesIn;
+        resultData.kPlatesOut = result.kPlatesOut;
+        resultData.angle = result.angle;
+        return resultData;
+      }
     });
 
     this.outputRows.set(results);
     this.calculateIsDone.set(true);
     this.eventsService.setResultData(results);
   }
-
-
 
   updateCell(rowIndex: number, field: keyof StepInputData, value: string): void {
     const rows = [...this.inputRows()];
@@ -152,7 +210,10 @@ export class CalculationPage implements OnInit{
   }
 
   clearAllInput(): void {
-    this.initializeData();
+    const izdelie = this.currentIzdelie();
+    if (izdelie) {
+      this.initializeData(izdelie);
+    }
     this.eventsService.setStepData([]);
     this.eventsService.setResultData([]);
   }
@@ -164,38 +225,36 @@ export class CalculationPage implements OnInit{
 
   private updateCanCalculate(): void {
     const rows = this.inputRows();
+    const izdelie = this.currentIzdelie();
+    if (!izdelie) {
+      this.canCalculate.set(false);
+      return;
+    }
+
     const allReady = rows.every(row => {
-      const required = getRequiredFields(this.izdelieType(), row.stage);
-      const needIn = required.includes(INPUT_FIELDS.R_NOM_IN);
-      const needOut = required.includes(INPUT_FIELDS.R_NOM_OUT);
-
-      const inOk = needIn ? this.hasValue(row.rNomIn) : true;
-      const outOk = needOut ? this.hasValue(row.rNomOut) : true;
-
-      return inOk && outOk;
+      if (izdelie.specialStages.includes(row.stage)) {
+        return this.hasValue(row.rNomIn);
+      } else {
+        return this.hasValue(row.rNomIn) && this.hasValue(row.rNomOut);
+      }
     });
 
     this.canCalculate.set(allReady);
   }
 
   async getReport(): Promise<void> {
-    const izdelieType = this.izdelieType();
+    const izdelie = this.currentIzdelie();
+    if (!izdelie) return;
+
     const inputRows = this.inputRows();
     const outputRows = this.outputRows();
 
-    const blob = await this.excelExportService.generateReport(izdelieType, inputRows, outputRows);
-    const fileName = `Отчет_${izdelieType}_${new Date().toISOString().split('T')[0]}.xlsx`;
-    saveAs(blob, fileName);
+    await this.excelExportService.generateReport(izdelie, inputRows, outputRows);
   }
 
-  shouldShowInputField(stage: number, field: string): boolean {
-    const type = this.izdelieType();
-    return getDisplayFields(type, stage).includes(field as any);
-  }
-
-  shouldShowOutputField(stage: number, field: string): boolean {
-    const type = this.izdelieType();
-    return getOutputFields(type, stage).includes(field as any);
+  isSpecialStage(stage: number): boolean {
+    const izdelie = this.currentIzdelie();
+    return izdelie?.specialStages.includes(stage) ?? false;
   }
 
   private isValidNumber(value: number): boolean {
@@ -207,8 +266,5 @@ export class CalculationPage implements OnInit{
   }
 
   protected readonly INPUT_FIELDS = INPUT_FIELDS;
-  protected readonly getTolerance = getTolerance;
-  protected readonly getPhysicalConstants = getPhysicalConstants;
   protected readonly OUTPUT_FIELDS = OUTPUT_FIELDS;
-  protected readonly isSpecialCaseStage = isSpecialCaseStage;
 }

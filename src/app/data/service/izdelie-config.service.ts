@@ -15,7 +15,7 @@ export class IzdelieConfigService {
 
   // Загрузка конфигурации
   loadConfig(): Observable<IzdelieDataConfig> {
-    const url = `${environment.backendURL}/api/config/izdelie`;
+    const url = '/api/config/izdelie';
 
     return this.http.get<IzdelieDataConfig>(url).pipe(
       tap(cfg => {
@@ -43,11 +43,6 @@ export class IzdelieConfigService {
   // Получить раздел по ID
   getSectionById(sectionId: string): IzdelieSection | undefined {
     return this.config?.sections.find(s => s.id === sectionId);
-  }
-
-  // Получить раздел по краткому имени
-  getSectionByNameShort(nameShort: string): IzdelieSection | undefined {
-    return this.config?.sections.find(s => s.nameShort === nameShort);
   }
 
   // Получить раздел по полному имени
@@ -87,31 +82,31 @@ export class IzdelieConfigService {
 
   // Обновить раздел
   updateSection(sectionId: string, data: Partial<IzdelieSection>): Observable<any> {
-    return this.http.put(`${environment.backendURL}/api/config/izdelie/sections/${sectionId}`, data);
+    return this.http.put(`/api/config/izdelie/sections/${sectionId}`, data);
   }
 
   // Обновить изделие
   updateIzdelie(sectionId: string, izdelieId: string, data: Partial<IzdelieConfigData>): Observable<any> {
-    return this.http.put(`${environment.backendURL}/api/config/izdelie/sections/${sectionId}/izdelies/${izdelieId}`, data);
+    return this.http.put(`/api/config/izdelie/sections/${sectionId}/izdelies/${izdelieId}`, data);
   }
 
   // Добавить изделие в раздел
   addIzdelieToSection(sectionId: string, izdelie: IzdelieConfigData): Observable<any> {
-    return this.http.post(`${environment.backendURL}/api/config/izdelie/sections/${sectionId}/izdelies`, izdelie);
+    return this.http.post(`/api/config/izdelie/sections/${sectionId}/izdelies`, izdelie);
   }
 
   // Добавить новый раздел
   addSection(section: {nameShort: string, nameFull: string, izdelies?: IzdelieConfigData[]}): Observable<any> {
-    return this.http.post(`${environment.backendURL}/api/config/izdelie/sections`, section);
+    return this.http.post(`/api/config/izdelie/sections`, section);
   }
 
   // Удалить раздел
   deleteSection(sectionId: string): Observable<any> {
-    return this.http.delete(`${environment.backendURL}/api/config/izdelie/sections/${sectionId}`);
+    return this.http.delete(`/api/config/izdelie/sections/${sectionId}`);
   }
 
   // Удалить изделие из раздела
   deleteIzdelieFromSection(sectionId: string, izdelieId: string): Observable<any> {
-    return this.http.delete(`${environment.backendURL}/api/config/izdelie/sections/${sectionId}/izdelies/${izdelieId}`);
+    return this.http.delete(`/api/config/izdelie/sections/${sectionId}/izdelies/${izdelieId}`);
   }
 }

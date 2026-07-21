@@ -1,40 +1,58 @@
-import {Component, DestroyRef, inject, signal} from '@angular/core';
-import {CalculationTypeEnum} from '../../../data/constant/calculation.type.enum';
-
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {IzdelieConfigService} from '../../../data/service/izdelie-config.service';
+import {IzdelieConfigData} from '../../../data/model/izdelie-data.interface';
 import {EventsService} from '../../../data/service/events.service';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {TranslatePipe} from '@ngx-translate/core';
 import {CalculationPage} from '../calculation-page/calculation-page';
 
 @Component({
   selector: 'app-body',
   imports: [
-    TranslatePipe,
     CalculationPage
   ],
   templateUrl: './body.html',
   styleUrl: './body.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Body  {
-  private readonly eService = inject(EventsService);
-  private readonly unsubscribeAfterDestroy = inject(DestroyRef);
+export class Body {
+  private readonly izdelieConfigService = inject(IzdelieConfigService);
+  private readonly eventsService = inject(EventsService);
 
-  protected readonly izdelieTypes = Object.values(CalculationTypeEnum);
-  activeTab = signal<CalculationTypeEnum>(CalculationTypeEnum.NA);
+  allIzdelies = signal<Array<{sectionId: string, izdelie: IzdelieConfigData}>>([]);
+
+  selectedIzdelie = signal<IzdelieConfigData | null>(null);
+  selectedSectionId = signal<string>('');
 
   constructor() {
-    this._changeTab();
+    this.loadIzdelies();
   }
 
-  _changeTab(){
-    this.eService.getCurrentTab()
-      .pipe(takeUntilDestroyed(this.unsubscribeAfterDestroy))
-      .subscribe(tab => this.activeTab.set(tab));
+  private loadIzdelies(): void {
+    this.izdelieConfigService.loadConfig().subscribe({
+      next: (config) => {
+        const items: Array<{sectionId: string, izdelie: IzdelieConfigData}> = [];
+
+        config.sections.forEach(section => {
+          section.izdelies.forEach(izdelie => {
+            items.push({ sectionId: section.id, izdelie });
+          });
+        });
+
+        this.allIzdelies.set(items);
+
+        if (items.length > 0) {
+          this.selectIzdelie(items[0].izdelie, items[0].sectionId);
+        }
+      },
+      error: (error) => {
+        console.error('Failed to load config:', error);
+      }
+    });
   }
 
-  onChangeTab(t: CalculationTypeEnum){
-    this.eService.setCurrentTab(t);
-  }
+  selectIzdelie(izdelie: IzdelieConfigData, sectionId: string): void {
+    this.selectedSectionId.set(sectionId);
+    this.selectedIzdelie.set(izdelie);
 
-  protected readonly CalculationTypeEnum = CalculationTypeEnum;
+    this.eventsService.setCurrentIzdelie(izdelie);
+  }
 }

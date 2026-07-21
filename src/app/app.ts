@@ -6,7 +6,6 @@ import {environment} from '../environments/environment';
 import {
   LS_APP_NAME,
   LS_APP_NAME_TEST,
-  LS_APP_TAB,
   LS_RESULT_DATA,
   LS_STEP_DATA
 } from './app.constant.config';
@@ -28,7 +27,8 @@ import {ThemeService} from './shared/theme/theme.service';
 import {NewsStore} from './shared/view/dialogs/news-dialog/model/store/news-store';
 import {Spinner} from './shared/view/components/spinner/spinner/spinner';
 import {NotificationList} from './shared/view/components/notifications/notification-list/notification-list';
-import {CalculationTypeEnum} from './data/constant/calculation.type.enum';
+import {IzdelieConfigService} from './data/service/izdelie-config.service';
+import {IzdelieConfigData} from './data/model/izdelie-data.interface';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +43,7 @@ export class App implements OnInit{
   private readonly themeService = inject(ThemeService);
   private readonly tService = inject(TranslateService);
   private readonly unsubscribeAfterDestroy = inject(DestroyRef);
+  private readonly izdelieConfigService = inject(IzdelieConfigService);
 
   protected cookieEnabled = false;
   private currentUser = USER_UNDEFINED;
@@ -92,7 +93,6 @@ export class App implements OnInit{
         this._resetLS();
         this._exitApp();
         this._changeUser();
-        this._changeTab();
         this._changeStepData();
         this._changeResultData();
       });
@@ -176,14 +176,6 @@ export class App implements OnInit{
       });
   }
 
-  _changeTab(){
-    this.eService.getCurrentTab()
-      .pipe(takeUntilDestroyed(this.unsubscribeAfterDestroy))
-      .subscribe(tab => {
-        this.lsService.addPropertyLS(this.lSName!, LS_APP_TAB, tab);
-      })
-  }
-
   _changeStepData(){
     this.eService.getStepData()
       .pipe(takeUntilDestroyed(this.unsubscribeAfterDestroy))
@@ -219,10 +211,6 @@ export class App implements OnInit{
     const appVersionLS = lsPropertyParse[LocalStorageEnum.APP_VERSION];
     const appVersion = appVersionLS ? appVersionLS : DEFAULT_APP_VERSION;
     this.eService.setUserAppVersion(appVersion);
-
-    //инициализация активной вкладки в приложении
-    const currentTabLS = lsPropertyParse[LS_APP_TAB] || CalculationTypeEnum.NA;
-    this.eService.setCurrentTab(currentTabLS);
 
     //инициализация начальной роли пользователя приложения
     const userRoleLS = lsPropertyParse[LocalStorageEnum.USER_ROLE];

@@ -1,11 +1,15 @@
 export class StepInputData {
-  stage: number;              // номер ступени
-  rNomIn: string;             // R номинальное входящее
-  rNomOut: string;            // R номинальное выходящее
-  a1: string;                 // высотный размер А1 (редактируемое или из константы)
-  a2: string;                 // высотный размер А2
+  sectionId: string;              // ID раздела
+  izdelieId: string;              // ID изделия
+  stage: number;                  // номер ступени
+  rNomIn: string;                 // R номинальное входящее
+  rNomOut: string;                // R номинальное выходящее
+  a1: string;                     // высотный размер А1 (редактируемое или из константы)
+  a2: string;                     // высотный размер А2
 
-  constructor(stage: number, a1: number, a2: number) {
+  constructor(sectionId: string, izdelieId: string, stage: number, a1: number, a2: number) {
+    this.sectionId = sectionId;
+    this.izdelieId = izdelieId;
     this.stage = stage;
     this.rNomIn = '';
     this.rNomOut = '';

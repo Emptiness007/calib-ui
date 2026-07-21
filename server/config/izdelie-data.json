@@ -4,12 +4,11 @@
   "sections": [
     {
       "id": "sec_a1b2c3d4",
-      "nameShort": "Калибры",
       "nameFull": "Калибровочный инструмент",
       "izdelies": [
         {
           "id": "item_x9y8z7w6",
-          "nameDisplay": "Калибр NA",
+          "nameDisplay": "Лопатки НА",
           "stages": [4, 5, 6, 7],
           "heightConstants": {
             "4": {"a1": 183, "a2": 196},
@@ -28,7 +27,7 @@
         },
         {
           "id": "item_m5n4o3p2",
-          "nameDisplay": "Калибр KR",
+          "nameDisplay": "Кольца рабочие",
           "stages": [4, 5, 6, 7, 8],
           "heightConstants": {
             "4": {"a1": 213.4, "a2": 220.9},

@@ -24,8 +24,8 @@ export enum AuthLoginUrlEnum {
 
 
 export enum UserRoleAppEnum {
-  MAINTAINER = 'FILESTORAGE_MAINTAINER', //разработчик - он просто бог
-  VIEW = 'FILESTORAGE_VIEW', //просмотр
+  MAINTAINER = 'CALIB_MAINTAINER', //разработчик - он просто бог
+  VIEW = 'CALIB_VIEW', //просмотр
   NONE = 'NONE_ROLE'
 }
 //магические ID пользователей
@@ -33,8 +33,8 @@ export const ID_UNDEFINED = 999999999;//для отсутствующего по
 export const ID_PRODUCTION = 888888888;//для пользователя при тестировании
 export const ID_DEVELOPMENT = 777777777;//для разработчика
 
-const ROLE_MAINTAINER = new RoleStore(1, UserRoleAppEnum.MAINTAINER, "Файловое хранилище: Разработчик");
-const ROLE_VIEW = new RoleStore(8, UserRoleAppEnum.VIEW, "Файловое хранилище: Просмотр");
+const ROLE_MAINTAINER = new RoleStore(1, UserRoleAppEnum.MAINTAINER, "Калибровые точки: Разработчик");
+const ROLE_VIEW = new RoleStore(8, UserRoleAppEnum.VIEW, "Калибровые точки: Просмотр");
 
 //инициализация отсутствующей роли
 export const ROLE_UNDEFINED = new RoleStore(ID_UNDEFINED, UserRoleAppEnum.NONE, 'Роль у пользователя не найдена');

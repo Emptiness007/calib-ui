@@ -50,10 +50,10 @@
             <ng-container [ngTemplateOutlet]="attentionBell"></ng-container>
           }
         </button>
-<!--        <button class="btn mb-2 p-0"-->
-<!--                ngbDropdownItem-->
-<!--                (click)="onOpenSettingsDialog()">-->
-<!--          <i class="bi bi-gear"></i> {{'SHARED.BUTTON.SETTINGS' | translate}}</button>-->
+        <button class="btn mb-2 p-0"
+                ngbDropdownItem
+                (click)="onOpenSettingsDialog()">
+          <i class="bi bi-gear"></i> {{'SHARED.BUTTON.SETTINGS' | translate}}</button>
         <button class="btn mb-2 p-0"
                 ngbDropdownItem
                 [disabled]="!instruction()"

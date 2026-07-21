@@ -18,10 +18,6 @@
     "PLACEHOLDER": "Введите значение"
   },
 
-  "OUTPUT": {
-
-  },
-
   "INFO": {
     "INPUT": "Входные данные",
     "RESULT": "Результаты вычислений",
@@ -31,7 +27,8 @@
   "CONSTANTS": {
     "TOLERANCE": "Допуск X: {{value}} мм",
     "H-SET": "Н<sub>заданное</sub>: {{value}} мм",
-    "H-MEASURED": "Н<sub>измеренное</sub>: {{value}} мм"
+    "H-MEASURED": "Н<sub>измеренное</sub>: {{value}} мм",
+    "PROTOCOL": "На основе протокола №{{value}}"
   },
 
   "TABLE": {

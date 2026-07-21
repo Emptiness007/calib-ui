@@ -1,30 +1,23 @@
 <section class="d-flex flex-column m-1 my-3 p-1 h-100 overflow-auto">
   <div class="d-flex justify-content-center gap-2 mb-3">
-    @for(t of izdelieTypes; track t){
+    @for (item of allIzdelies(); track item.sectionId + '-' + item.izdelie.id) {
       <button
         type="button"
         class="btn nav-link"
-        [class.active]="activeTab() === t"
-        (click)="onChangeTab(t)" >
-        {{ ('CALCULATION-TYPE.' + t) | translate }}
+        [class.active]="selectedIzdelie()?.id === item.izdelie.id"
+        (click)="selectIzdelie(item.izdelie, item.sectionId)">
+        {{ item.izdelie.nameDisplay }}
       </button>
     }
   </div>
-  <div class="d-flex flex-column overflow-auto h-100 align-items-center">
-    @switch (activeTab()){
-      @case (CalculationTypeEnum.NA){
-        <app-calculation-page class="d-flex flex-column gap-4 "
-                              [izdelieType]="CalculationTypeEnum.NA">
-        </app-calculation-page>
-      }
-      @case (CalculationTypeEnum.KR){
-        <app-calculation-page class="d-flex flex-column gap-4 "
-                              [izdelieType]="CalculationTypeEnum.KR">
-        </app-calculation-page>
-      }
-    }
 
+  <div class="d-flex flex-column overflow-auto h-100 align-items-center">
+    @if (selectedIzdelie()) {
+      <app-calculation-page
+        class="d-flex flex-column gap-4"
+        [sectionId]="selectedSectionId()"
+        [izdelieId]="selectedIzdelie()!.id">
+      </app-calculation-page>
+    }
   </div>
 </section>
-
-
