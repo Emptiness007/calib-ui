@@ -3,13 +3,11 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {StepInputData} from '../../../data/model/step-input-data';
 import {StepResultData} from '../../../data/model/step-result-data';
 import {CalculationService} from '../../../data/service/calculation.service';
-import {IzdelieConfigService} from '../../../data/service/izdelie-config.service';
-import {IzdelieConfigData} from '../../../data/model/izdelie-data.interface';
 import {EventsService} from '../../../data/service/events.service';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Angle} from '../../../data/model/interface/angle.interface';
 import {ExcelExportService} from '../../../data/service/excel-export.service';
-
+import {ProductConfigService} from '../../../data/service/product-config.service';
+import {PartData} from '../../../data/model/product-data.interface';
 
 export const INPUT_FIELDS = {
   STAGE: 'stage',
@@ -39,14 +37,13 @@ export const OUTPUT_FIELDS = {
 })
 export class CalculationPage implements OnInit {
   private readonly calculationService = inject(CalculationService);
-  private readonly izdelieConfigService = inject(IzdelieConfigService);
+  private readonly productConfigService = inject(ProductConfigService);
   private readonly eventsService = inject(EventsService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly excelExportService = inject(ExcelExportService);
 
-  // Входные параметры: sectionId и izdelieId
-  sectionId = input.required<string>();
-  izdelieId = input.required<string>();
+  productId = input.required<string>();
+  partId = input.required<string>();
 
   inputRows = signal<StepInputData[]>([]);
   outputRows = signal<StepResultData[]>([]);
@@ -54,7 +51,7 @@ export class CalculationPage implements OnInit {
   calculateIsDone = signal<boolean>(false);
 
   // Текущая конфигурация изделия
-  protected currentIzdelie = signal<IzdelieConfigData | null>(null);
+  protected currentPart = signal<PartData | null>(null);
 
   // Список полей ввода
   readonly inputFieldList = computed(() => {
@@ -79,18 +76,13 @@ export class CalculationPage implements OnInit {
     ];
   });
 
-  private readonly stageList = computed(() => {
-    const izdelie = this.currentIzdelie();
-    return izdelie ? izdelie.stages : [];
-  });
-
   constructor() {
     effect(() => {
-      this.sectionId();
-      this.izdelieId();
+      this.productId();
+      this.partId();
 
       untracked(() => {
-        this.loadIzdelieData();
+        this.loadPartData();
       });
     });
   }
@@ -99,32 +91,45 @@ export class CalculationPage implements OnInit {
     //this.setupSubscriptions();
   }
 
-  private loadIzdelieData(): void {
-    const section = this.izdelieConfigService.getSectionById(this.sectionId());
-    if (!section) {
-      console.error(`Section ${this.sectionId()} not found`);
+  private loadPartData(): void {
+    const config = this.productConfigService.getConfig();
+    if (!config) {
+      console.error('Config not loaded');
       return;
     }
 
-    const izdelie = section.izdelies.find(i => i.id === this.izdelieId());
-    if (!izdelie) {
-      console.error(`Izdelie ${this.izdelieId()} not found in section ${this.sectionId()}`);
+    const product = config.product.find(p => p.id === this.productId());
+    if (!product) {
+      console.error(`Product ${this.productId()} not found`);
       return;
     }
 
-    this.currentIzdelie.set(izdelie);
-    this.initializeData(izdelie);
+    const part = product.parts.find(p => p.id === this.partId());
+    if (!part) {
+      console.error(`Part ${this.partId()} not found in product ${this.productId()}`);
+      return;
+    }
+
+    this.currentPart.set(part);
+    this.initializeData(part);
   }
 
-  private initializeData(izdelie: IzdelieConfigData): void {
-    const stages = izdelie.stages;
-    const rows = stages.map(stage => {
-      const stageKey = stage.toString();
-      const heightConstants = izdelie.heightConstants[stageKey];
+  private initializeData(part: PartData): void {
+    const stageKeys = Object.keys(part.stages).sort((a, b) => Number(a) - Number(b));
+
+    const rows = stageKeys.map(stageKey => {
+      const stage = Number(stageKey);
+      const heightConstants = part.stages[stageKey];
       const a1 = heightConstants?.a1 ?? 0;
       const a2 = heightConstants?.a2 ?? 0;
 
-      return new StepInputData(this.sectionId(), this.izdelieId(), stage, a1, a2);
+      return new StepInputData(
+        this.productId(),
+        this.partId(),
+        stage,
+        a1,
+        a2
+      );
     });
 
     this.inputRows.set(rows);
@@ -134,27 +139,25 @@ export class CalculationPage implements OnInit {
   }
 
   calculateAll(): void {
-    const izdelie = this.currentIzdelie();
-    if (!izdelie) return;
+    const part = this.currentPart();
+    if (!part) return;
 
     const results = this.inputRows().map(row => {
-      // Проверяем специальные ступени
-      if (izdelie.specialStages.includes(row.stage)) {
-        // Для специальных ступеней нужен только rNomIn
+      if (part.specialStages.includes(row.stage)) {
         if (!this.hasValue(row.rNomIn)) return new StepResultData();
 
         const payload = {
-          sectionId: this.sectionId(),
-          izdelieId: this.izdelieId(),
+          productId: this.productId(),
+          partId: this.partId(),
           stage: row.stage,
           rNomIn: Number(row.rNomIn),
           rNomOut: NaN
         };
 
-        const result = this.calculationService.calculate(payload, izdelie);
+        const result = this.calculationService.calculate(payload, part);
         const resultData = new StepResultData();
-        resultData.sectionId = result.sectionId;
-        resultData.izdelieId = result.izdelieId;
+        resultData.productId = result.productId;
+        resultData.partId = result.partId;
         resultData.stage = result.stage;
         resultData.rMaxIn = result.rMaxIn;
         resultData.kCarriage = result.kCarriage;
@@ -174,17 +177,17 @@ export class CalculationPage implements OnInit {
         }
 
         const payload = {
-          sectionId: this.sectionId(),
-          izdelieId: this.izdelieId(),
+          productId: this.productId(),
+          partId: this.partId(),
           stage: row.stage,
           rNomIn,
           rNomOut
         };
 
-        const result = this.calculationService.calculate(payload, izdelie);
+        const result = this.calculationService.calculate(payload, part);
         const resultData = new StepResultData();
-        resultData.sectionId = result.sectionId;
-        resultData.izdelieId = result.izdelieId;
+        resultData.productId = result.productId;
+        resultData.partId = result.partId;
         resultData.stage = result.stage;
         resultData.rMaxIn = result.rMaxIn;
         resultData.rMaxOut = result.rMaxOut;
@@ -210,9 +213,9 @@ export class CalculationPage implements OnInit {
   }
 
   clearAllInput(): void {
-    const izdelie = this.currentIzdelie();
-    if (izdelie) {
-      this.initializeData(izdelie);
+    const part = this.currentPart();
+    if (part) {
+      this.initializeData(part);
     }
     this.eventsService.setStepData([]);
     this.eventsService.setResultData([]);
@@ -225,14 +228,14 @@ export class CalculationPage implements OnInit {
 
   private updateCanCalculate(): void {
     const rows = this.inputRows();
-    const izdelie = this.currentIzdelie();
-    if (!izdelie) {
+    const part = this.currentPart();
+    if (!part) {
       this.canCalculate.set(false);
       return;
     }
 
     const allReady = rows.every(row => {
-      if (izdelie.specialStages.includes(row.stage)) {
+      if (part.specialStages.includes(row.stage)) {
         return this.hasValue(row.rNomIn);
       } else {
         return this.hasValue(row.rNomIn) && this.hasValue(row.rNomOut);
@@ -243,18 +246,18 @@ export class CalculationPage implements OnInit {
   }
 
   async getReport(): Promise<void> {
-    const izdelie = this.currentIzdelie();
-    if (!izdelie) return;
+    const part = this.currentPart();
+    if (!part) return;
 
     const inputRows = this.inputRows();
     const outputRows = this.outputRows();
 
-    await this.excelExportService.generateReport(izdelie, inputRows, outputRows);
+    await this.excelExportService.generateReport(part, inputRows, outputRows);
   }
 
   isSpecialStage(stage: number): boolean {
-    const izdelie = this.currentIzdelie();
-    return izdelie?.specialStages.includes(stage) ?? false;
+    const part = this.currentPart();
+    return part?.specialStages.includes(stage) ?? false;
   }
 
   private isValidNumber(value: number): boolean {

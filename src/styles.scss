@@ -3,7 +3,6 @@
 
 @use 'bootstrap/scss/bootstrap';
 @use 'bootstrap-icons/font/bootstrap-icons';
-@import './styles/theme-overrides.scss';
 
 
 //значения по умолчанию для всего документа
@@ -185,5 +184,11 @@ thead {
     background-color: var(--btn-dark-primary-color);
     border-color: var(--btn-dark-primary-color);
   }
+}
+
+.shadow-custom{
+  box-shadow:
+    0 2px 12px rgba(30, 60, 90, 0.06),
+    0 1px 4px rgba(30, 60, 90, 0.04);
 }
 

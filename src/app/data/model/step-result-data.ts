@@ -1,8 +1,8 @@
 import {Angle} from './interface/angle.interface';
 
 export class StepResultData {
-  sectionId!: string;             // ID раздела
-  izdelieId!: string;             // ID изделия
+  productId!: string;             // ID изделия
+  partId!: string;             // ID части изделия
   stage!: number;                 // номер ступени
   rMaxIn?: number;                // Rmax вх (мм)
   rMaxOut?: number;               // Rmax вых (мм)

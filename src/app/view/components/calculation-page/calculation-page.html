@@ -1,4 +1,4 @@
-<div class="info-card  shadow-sm">
+<div class="info-card  shadow-custom">
   <div class="d-flex justify-content-center mb-2">
     <h5 class="fw-semibold">{{ 'INFO.INPUT' | translate }}</h5>
   </div>
@@ -70,21 +70,21 @@
 
 </div>
 
-<div class="info-card  shadow-sm">
+<div class="info-card  shadow-custom">
   <div class="d-flex justify-content-center mb-2">
     <h6 class="fw-semibold">{{ 'INFO.CONSTANTS' | translate }}</h6>
   </div>
   <div class="d-flex flex-row gap-5 flex-wrap">
-    @if (currentIzdelie()) {
-      <span [innerHTML]="'CONSTANTS.TOLERANCE' | translate: { value: currentIzdelie()!.tolerance }"></span>
-      <span [innerHTML]="'CONSTANTS.H-SET' | translate: { value: currentIzdelie()!.physicalConstants.hSet }"></span>
-      <span [innerHTML]="'CONSTANTS.H-MEASURED' | translate: { value: currentIzdelie()!.physicalConstants.hMeasured }"></span>
-      <span [innerHTML]="'CONSTANTS.PROTOCOL' | translate: { value: currentIzdelie()!.physicalConstants.protocolNumber }"></span>
+    @if (currentPart()) {
+      <span [innerHTML]="'CONSTANTS.TOLERANCE' | translate: { value: currentPart()!.tolerance }"></span>
+      <span [innerHTML]="'CONSTANTS.H-SET' | translate: { value: currentPart()!.physicalConstants.hSet }"></span>
+      <span [innerHTML]="'CONSTANTS.H-MEASURED' | translate: { value: currentPart()!.physicalConstants.hMeasured }"></span>
+      <span [innerHTML]="'CONSTANTS.PROTOCOL' | translate: { value: currentPart()!.physicalConstants.protocol }"></span>
     }
   </div>
 </div>
 
-<div class="info-card shadow-sm">
+<div class="info-card shadow-custom">
   <div class="d-flex justify-content-center mb-2">
     <h5 class="fw-semibold">{{ 'INFO.RESULT' | translate }}</h5>
   </div>

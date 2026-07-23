@@ -4,7 +4,7 @@
 
 .info-card{
   background-color: var(--info-card-background);
-  border: none;
+  border: 1px solid var(--card-border-color);
   border-radius: 10px;
   padding: 10px;
 }

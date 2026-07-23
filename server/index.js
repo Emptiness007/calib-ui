@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const izdelieRoutes = require('./routes/izdelie-routes');
+const productRoutes = require('./routes/product-routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../dist/calib-ui/browser')));
 
 // API Routes
-app.use('/api/config/izdelie', izdelieRoutes);
+app.use('/api/config', productRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

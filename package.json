@@ -13,7 +13,7 @@
     "t-update": "ngx-translate-extract --input ./src --output public/i18n/ru.json public/i18n/en.json --sort --format namespaced-json",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "node": "nvm use 24.14.0"
+    "node": "nvm use 26.2.0"
   },
   "private": true,
   "packageManager": "npm@11.13.0",
@@ -47,7 +47,6 @@
     "@angular/compiler-cli": "^22.0.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
-    "typescript": "~6.0.2",
-    "vitest": "^4.0.8"
+    "typescript": "~6.0.2"
   }
 }

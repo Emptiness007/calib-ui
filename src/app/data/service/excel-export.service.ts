@@ -1,10 +1,10 @@
-import {inject, Injectable} from '@angular/core';
+import { Injectable} from '@angular/core';
 import {StepInputData} from '../model/step-input-data';
 import {StepResultData} from '../model/step-result-data';
-import {IzdelieConfigData} from '../model/izdelie-data.interface';
 import * as ExcelJS from 'exceljs';
 import {saveAs} from 'file-saver';
 import {Angle} from '../model/interface/angle.interface';
+import {PartData} from '../model/product-data.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ import {Angle} from '../model/interface/angle.interface';
 export class ExcelExportService {
 
   async generateReport(
-    izdelie: IzdelieConfigData,
+    partData: PartData,
     inputRows: StepInputData[],
     outputRows: StepResultData[]
   ): Promise<void> {
@@ -26,15 +26,15 @@ export class ExcelExportService {
 
     // Заголовок с названием изделия
     sheet.mergeCells('A1:G1');
-    sheet.getCell('A1').value = izdelie.nameDisplay;
+    sheet.getCell('A1').value = partData.nameDisplay;
     sheet.getCell('A1').font = {bold: true, size: 16};
     sheet.getCell('A1').alignment = {horizontal: 'center'};
 
     let currentRow = 3;
 
-    currentRow = this.addInputSection(sheet, currentRow, inputRows, izdelie);
+    currentRow = this.addInputSection(sheet, currentRow, inputRows, partData);
 
-    currentRow = this.addConstantsSection(sheet, currentRow, izdelie);
+    currentRow = this.addConstantsSection(sheet, currentRow, partData);
 
     currentRow = this.addOutputSection(sheet, currentRow, outputRows);
 
@@ -45,7 +45,7 @@ export class ExcelExportService {
     // Генерируем и сохраняем файл
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-    const fileName = `Отчет_${izdelie.nameDisplay}_${new Date().toISOString().split('T')[0]}.xlsx`;
+    const fileName = `Отчет_${partData.nameDisplay}_${new Date().toISOString().split('T')[0]}.xlsx`;
     saveAs(blob, fileName);
   }
 
@@ -53,7 +53,7 @@ export class ExcelExportService {
     sheet: ExcelJS.Worksheet,
     startRow: number,
     inputRows: StepInputData[],
-    izdelie: IzdelieConfigData
+    partData: PartData
   ): number {
     let currentRow = startRow;
 
@@ -97,7 +97,7 @@ export class ExcelExportService {
   private addConstantsSection(
     sheet: ExcelJS.Worksheet,
     startRow: number,
-    izdelie: IzdelieConfigData
+    partData: PartData
   ): number {
     let currentRow = startRow;
 
@@ -108,7 +108,7 @@ export class ExcelExportService {
     currentRow++;
 
     // Константы
-    const {tolerance, physicalConstants} = izdelie;
+    const {tolerance, physicalConstants} = partData;
     const {hSet, hMeasured} = physicalConstants;
 
     const constantsData = [

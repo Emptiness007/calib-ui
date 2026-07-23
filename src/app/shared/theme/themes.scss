@@ -75,6 +75,20 @@
 
   --tag-color: #eef3fc;
   --tag-text-color: #1f5e7e;
+
+  --card-border-color: #e2eaf2;
+
+  --tree-node-active: #f7faff;
+  --tree-node-hover: #f2f7fd;
+  --tree-node-header-hover: #f2f7fd;
+  --tree-node-active-name-color: #0d2847;
+  --tree-toggle-color: #8aa3bc;
+  --tree-toggle-active-color: #3d6b95;
+  --tree-child-color: #2e4a6a;
+  --tree-child-hover-color: #0f2b4a;
+  --tree-child-active-color: #0a1f3a;
+  --tree-child-active-bg: #e6eff9;
+  --tree-child-border-color: #dce5ef;
 }
 
 body[data-theme="dark"] {

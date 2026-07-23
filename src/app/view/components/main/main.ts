@@ -19,6 +19,7 @@ import {TextT} from '../../../shared/translate/translate.config';
 export class Main {
   private readonly eService = inject(EventsService);
 
+
   constructor() {
     this.eService.setCurrentAppVersion(CURRENT_APP_VERSION);
     this.eService.setAppName(new TextT(APP_NAME));

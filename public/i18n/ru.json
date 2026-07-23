@@ -1,7 +1,7 @@
 {
   "APP": {
     "INFO": "Тут будет информация о моём крутом приложении",
-    "NAME": "Расчет калибровых точек КВД"
+    "NAME": "Расчет калибровых точек"
   },
 
   "BUTTON": {
@@ -28,7 +28,7 @@
     "TOLERANCE": "Допуск X: {{value}} мм",
     "H-SET": "Н<sub>заданное</sub>: {{value}} мм",
     "H-MEASURED": "Н<sub>измеренное</sub>: {{value}} мм",
-    "PROTOCOL": "На основе протокола №{{value}}"
+    "PROTOCOL": "Значения взяты на основании: {{value}}"
   },
 
   "TABLE": {
@@ -37,11 +37,11 @@
     "STAGE": "Ступень",
     "RNOMIN": "R<sub>ном вх</sub> (мм)",
     "RNOMOUT": "R<sub>ном вых</sub> (мм)",
-    "RMAXIN": "R<sub>max вх</sub>",
-    "RMAXOUT": "R<sub>max вых</sub>",
-    "KPLATESIN": "K<sub>плиток вх</sub>",
-    "KPLATESOUT": "K<sub>плиток вых</sub>",
-    "ANGLE": "Угол А"
+    "RMAXIN": "R<sub>max вх</sub>  (мм)",
+    "RMAXOUT": "R<sub>max вых</sub>  (мм)",
+    "KPLATESIN": "K<sub>плиток вх</sub>  (мм)",
+    "KPLATESOUT": "K<sub>плиток вых</sub>  (мм)",
+    "ANGLE": "Угол А (Г°М’С”)"
   }
 
 }

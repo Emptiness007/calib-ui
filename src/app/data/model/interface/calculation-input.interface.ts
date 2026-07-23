@@ -1,6 +1,6 @@
 export interface CalculationInput {
-  sectionId: string;           // ID раздела
-  izdelieId: string;           // ID изделия
+  productId: string;           // ID изделия
+  partId: string;           // ID части изделия
   stage: number;               // ступень
   rNomIn: number;              // R номинальное входящее (мм)
   rNomOut: number;             // R номинальное выходящее (мм)

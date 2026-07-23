@@ -101,7 +101,7 @@ calib-ui/
 │   ├── config/
 │   │   └── izdelie-data.json # Конфигурация изделий
 │   └── routes/
-│       └── izdelie-routes.js # API маршруты
+│       └── product-routes.js # API маршруты
 ├── src/
 │   ├── app/
 │   │   ├── data/

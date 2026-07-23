@@ -8,7 +8,6 @@ import {NewsStore} from '../../shared/view/dialogs/news-dialog/model/store/news-
 import {BehaviorSubject} from 'rxjs';
 import {StepInputData} from '../model/step-input-data';
 import {StepResultData} from '../model/step-result-data';
-import {IzdelieConfigData} from '../model/izdelie-data.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -102,16 +101,6 @@ export class EventsService {
   }
   getNews(){
     return this.seService.getNews();
-  }
-
-  //текущее выбранное изделие
-  // @ts-ignore
-  private currentIzdelie$ = new BehaviorSubject<IzdelieConfigData | null>(null);
-  setCurrentIzdelie(izdelie: IzdelieConfigData){
-    this.currentIzdelie$.next(izdelie);
-  }
-  getCurrentIzdelie(){
-    return this.currentIzdelie$.asObservable();
   }
 
   //входные данные для изделия

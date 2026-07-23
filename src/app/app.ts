@@ -27,8 +27,7 @@ import {ThemeService} from './shared/theme/theme.service';
 import {NewsStore} from './shared/view/dialogs/news-dialog/model/store/news-store';
 import {Spinner} from './shared/view/components/spinner/spinner/spinner';
 import {NotificationList} from './shared/view/components/notifications/notification-list/notification-list';
-import {IzdelieConfigService} from './data/service/izdelie-config.service';
-import {IzdelieConfigData} from './data/model/izdelie-data.interface';
+import {ProductConfigService} from './data/service/product-config.service';
 
 @Component({
   selector: 'app-root',
@@ -43,7 +42,7 @@ export class App implements OnInit{
   private readonly themeService = inject(ThemeService);
   private readonly tService = inject(TranslateService);
   private readonly unsubscribeAfterDestroy = inject(DestroyRef);
-  private readonly izdelieConfigService = inject(IzdelieConfigService);
+  private readonly productConfigService = inject(ProductConfigService);
 
   protected cookieEnabled = false;
   private currentUser = USER_UNDEFINED;
@@ -54,6 +53,7 @@ export class App implements OnInit{
     if(!this.cookieIsActive()) return;
     this.initUserAndLocalStorage();
     this.initNews();
+    this.loadConfigData();
   }
 
   //инициализация переводов
@@ -240,5 +240,17 @@ export class App implements OnInit{
       new NewsStore('v.0.0.1', new Date(2026, 4, 1), ['Начало разработки приложения'])
     ];
     this.eService.setNews(news);
+  }
+
+  private loadConfigData(){
+    this.productConfigService.loadConfig().subscribe({
+      next: (config) => {
+        console.log('Config loaded successfully');
+        console.log(config);
+      },
+      error: (error) => {
+        console.error('Failed to load config:', error);
+      }
+    });
   }
 }

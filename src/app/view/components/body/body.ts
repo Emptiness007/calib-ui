@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
-import {IzdelieConfigService} from '../../../data/service/izdelie-config.service';
-import {IzdelieConfigData} from '../../../data/model/izdelie-data.interface';
+import {ProductConfigService} from '../../../data/service/product-config.service';
 import {EventsService} from '../../../data/service/events.service';
 import {CalculationPage} from '../calculation-page/calculation-page';
+import {PartData, ProductData} from '../../../data/model/product-data.interface';
 
 @Component({
   selector: 'app-body',
@@ -14,34 +14,38 @@ import {CalculationPage} from '../calculation-page/calculation-page';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Body {
-  private readonly izdelieConfigService = inject(IzdelieConfigService);
+  private readonly productConfigService = inject(ProductConfigService);
   private readonly eventsService = inject(EventsService);
 
-  allIzdelies = signal<Array<{sectionId: string, izdelie: IzdelieConfigData}>>([]);
+  products = signal<ProductData[]>([]);
+  expandedProducts = signal<Set<string>>(new Set());
 
-  selectedIzdelie = signal<IzdelieConfigData | null>(null);
-  selectedSectionId = signal<string>('');
+  selectedPart = signal<PartData | null>(null);
+  selectedProductId = signal<string>('');
 
   constructor() {
-    this.loadIzdelies();
+    this.loadProducts();
   }
 
-  private loadIzdelies(): void {
-    this.izdelieConfigService.loadConfig().subscribe({
+  toggleProduct(productId: string): void {
+    const current = this.expandedProducts();
+    const newSet = new Set(current);
+    if (newSet.has(productId)) {
+      newSet.delete(productId);
+    } else {
+      newSet.add(productId);
+    }
+    this.expandedProducts.set(newSet);
+  }
+
+  isProductExpanded(productId: string): boolean {
+    return this.expandedProducts().has(productId);
+  }
+
+  private loadProducts(): void {
+    this.productConfigService.loadConfig().subscribe({
       next: (config) => {
-        const items: Array<{sectionId: string, izdelie: IzdelieConfigData}> = [];
-
-        config.sections.forEach(section => {
-          section.izdelies.forEach(izdelie => {
-            items.push({ sectionId: section.id, izdelie });
-          });
-        });
-
-        this.allIzdelies.set(items);
-
-        if (items.length > 0) {
-          this.selectIzdelie(items[0].izdelie, items[0].sectionId);
-        }
+        this.products.set(config.product);
       },
       error: (error) => {
         console.error('Failed to load config:', error);
@@ -49,10 +53,8 @@ export class Body {
     });
   }
 
-  selectIzdelie(izdelie: IzdelieConfigData, sectionId: string): void {
-    this.selectedSectionId.set(sectionId);
-    this.selectedIzdelie.set(izdelie);
-
-    this.eventsService.setCurrentIzdelie(izdelie);
+  selectPart(part: PartData, productId: string): void {
+    this.selectedProductId.set(productId);
+    this.selectedPart.set(part);
   }
 }
