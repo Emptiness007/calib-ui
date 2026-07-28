@@ -1,13 +1,14 @@
-import {Component, computed, DestroyRef, effect, inject, input, OnInit, signal, untracked} from '@angular/core';
+import {Component, computed, effect, inject, input, signal, untracked} from '@angular/core';
 import {TranslatePipe} from '@ngx-translate/core';
 import {StepInputData} from '../../../data/model/step-input-data';
 import {StepResultData} from '../../../data/model/step-result-data';
 import {CalculationService} from '../../../data/service/calculation.service';
-import {EventsService} from '../../../data/service/events.service';
 import {Angle} from '../../../data/model/interface/angle.interface';
 import {ExcelExportService} from '../../../data/service/excel-export.service';
 import {ProductConfigService} from '../../../data/service/product-config.service';
-import {PartData} from '../../../data/model/product-data.interface';
+import {PartData, ProductData} from '../../../data/model/product-data.interface';
+import {NotificationService} from '../../../shared/view/components/notifications/notification.service';
+import {TextT} from '../../../shared/translate/translate.config';
 
 export const INPUT_FIELDS = {
   STAGE: 'stage',
@@ -35,12 +36,11 @@ export const OUTPUT_FIELDS = {
   templateUrl: './calculation-page.html',
   styleUrl: './calculation-page.scss',
 })
-export class CalculationPage implements OnInit {
+export class CalculationPage {
   private readonly calculationService = inject(CalculationService);
   private readonly productConfigService = inject(ProductConfigService);
-  private readonly eventsService = inject(EventsService);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly excelExportService = inject(ExcelExportService);
+  private readonly notificationService = inject(NotificationService);
 
   productId = input.required<string>();
   partId = input.required<string>();
@@ -50,10 +50,8 @@ export class CalculationPage implements OnInit {
   canCalculate = signal<boolean>(false);
   calculateIsDone = signal<boolean>(false);
 
-  // Текущая конфигурация изделия
   protected currentPart = signal<PartData | null>(null);
-
-  // Список полей ввода
+  protected currentProduct = signal<ProductData | null>(null);
   readonly inputFieldList = computed(() => {
     return [
       INPUT_FIELDS.STAGE,
@@ -63,8 +61,6 @@ export class CalculationPage implements OnInit {
       INPUT_FIELDS.R_NOM_OUT
     ];
   });
-
-  // Список полей вывода
   readonly outputFieldList = computed(() => {
     return [
       OUTPUT_FIELDS.STAGE,
@@ -87,29 +83,24 @@ export class CalculationPage implements OnInit {
     });
   }
 
-  ngOnInit() {
-    //this.setupSubscriptions();
-  }
-
   private loadPartData(): void {
-    const config = this.productConfigService.getConfig();
-    if (!config) {
-      console.error('Config not loaded');
-      return;
-    }
-
-    const product = config.product.find(p => p.id === this.productId());
+    const product = this.productConfigService.getProduct(this.productId());
     if (!product) {
-      console.error(`Product ${this.productId()} not found`);
+      const errorMsg = !this.productConfigService.getConfig()
+        ? new TextT('CONFIG.NOT-LOADED')
+        : new TextT('CONFIG.PRODUCT-NOT-FOUND', { productId: this.productId() });
+      this.notificationService.showNegative(errorMsg);
       return;
     }
 
-    const part = product.parts.find(p => p.id === this.partId());
+    const part = this.productConfigService.getPart(this.productId(), this.partId());
     if (!part) {
-      console.error(`Part ${this.partId()} not found in product ${this.productId()}`);
+      const errorMsg = new TextT('CONFIG.PART-NOT-FOUND', { partId: this.partId(), productId: this.productId() });
+      this.notificationService.showNegative(errorMsg);
       return;
     }
 
+    this.currentProduct.set(product);
     this.currentPart.set(part);
     this.initializeData(part);
   }
@@ -155,14 +146,7 @@ export class CalculationPage implements OnInit {
         };
 
         const result = this.calculationService.calculate(payload, part);
-        const resultData = new StepResultData();
-        resultData.productId = result.productId;
-        resultData.partId = result.partId;
-        resultData.stage = result.stage;
-        resultData.rMaxIn = result.rMaxIn;
-        resultData.kCarriage = result.kCarriage;
-        resultData.kPlatesIn = result.kPlatesIn;
-        return resultData;
+        return Object.assign(new StepResultData(), result);
       } else {
         // Для обычных ступеней нужны оба значения
         if (!this.hasValue(row.rNomIn) || !this.hasValue(row.rNomOut)) {
@@ -185,31 +169,24 @@ export class CalculationPage implements OnInit {
         };
 
         const result = this.calculationService.calculate(payload, part);
-        const resultData = new StepResultData();
-        resultData.productId = result.productId;
-        resultData.partId = result.partId;
-        resultData.stage = result.stage;
-        resultData.rMaxIn = result.rMaxIn;
-        resultData.rMaxOut = result.rMaxOut;
-        resultData.kCarriage = result.kCarriage;
-        resultData.kPlatesIn = result.kPlatesIn;
-        resultData.kPlatesOut = result.kPlatesOut;
-        resultData.angle = result.angle;
-        return resultData;
+        return Object.assign(new StepResultData(), result);
       }
     });
 
     this.outputRows.set(results);
     this.calculateIsDone.set(true);
-    this.eventsService.setResultData(results);
   }
 
   updateCell(rowIndex: number, field: keyof StepInputData, value: string): void {
     const rows = [...this.inputRows()];
     (rows[rowIndex] as any)[field] = value;
     this.inputRows.set(rows);
-    this.eventsService.setStepData(rows);
     this.updateCanCalculate();
+
+    if (value === '' || value === null || value === undefined) {
+      this.outputRows.set([]);
+      this.calculateIsDone.set(false);
+    }
   }
 
   clearAllInput(): void {
@@ -217,8 +194,6 @@ export class CalculationPage implements OnInit {
     if (part) {
       this.initializeData(part);
     }
-    this.eventsService.setStepData([]);
-    this.eventsService.setResultData([]);
   }
 
   formatAngle(angle: Angle): string {

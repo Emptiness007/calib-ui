@@ -1,6 +1,10 @@
+<div class="info-card shadow-custom">
+    <h6 class="fw-bold text-center">{{ currentProduct()!.nameFull }} - {{ currentPart()!.nameDisplay }}</h6>
+</div>
+
 <div class="info-card  shadow-custom">
-  <div class="d-flex justify-content-center mb-2">
-    <h5 class="fw-semibold">{{ 'INFO.INPUT' | translate }}</h5>
+  <div class="d-flex justify-content-center mb-2 align-items-center gap-2">
+    <h5 class="fw-semibold m-0">{{ 'INFO.INPUT' | translate }}</h5>
   </div>
 
   <div class="table-responsive">
@@ -52,20 +56,24 @@
     </table>
   </div>
 
-  <div class="d-flex flex-row justify-content-end gap-2">
-    <button
-      class="btn btn-primary btn-sm"
-      [disabled]="!canCalculate()"
-      (click)="calculateAll()"
-      type="button">
-      {{ 'BUTTON.CALCULATE' | translate }}
-    </button>
-    <button
-      class="btn btn-secondary btn-sm"
-      (click)="clearAllInput()"
-      type="button">
-      {{ 'SHARED.BUTTON.CLEAR' | translate }}
-    </button>
+  <div class="d-flex justify-content-between gap-2 mt-2 align-items-center">
+    <span class="text-warning">* {{ 'INPUT.DISABLED-INFO' | translate }}</span>
+    <div class="d-flex gap-2">
+      <button
+        class="btn btn-primary btn-sm"
+        [disabled]="!canCalculate()"
+        (click)="calculateAll()"
+        type="button">
+        {{ 'BUTTON.CALCULATE' | translate }}
+      </button>
+      <button
+        class="btn btn-secondary btn-sm"
+        (click)="clearAllInput()"
+        type="button">
+        {{ 'SHARED.BUTTON.CLEAR' | translate }}
+      </button>
+    </div>
+
   </div>
 
 </div>
@@ -74,13 +82,20 @@
   <div class="d-flex justify-content-center mb-2">
     <h6 class="fw-semibold">{{ 'INFO.CONSTANTS' | translate }}</h6>
   </div>
-  <div class="d-flex flex-row gap-5 flex-wrap">
-    @if (currentPart()) {
-      <span [innerHTML]="'CONSTANTS.TOLERANCE' | translate: { value: currentPart()!.tolerance }"></span>
+  <div class="d-flex gap-3 justify-content-center">
+    <span class="border-divider">|</span>
+    <span [innerHTML]="'CONSTANTS.TOLERANCE' | translate: { value: currentPart()!.tolerance }"></span>
+    <span class="border-divider">|</span>
+    <div class="d-flex gap-2">
       <span [innerHTML]="'CONSTANTS.H-SET' | translate: { value: currentPart()!.physicalConstants.hSet }"></span>
+      <span class="fw-bold">{{currentPart()!.physicalConstants.protocol}}</span>
+    </div>
+    <span class="border-divider">|</span>
+    <div class="d-flex gap-2">
       <span [innerHTML]="'CONSTANTS.H-MEASURED' | translate: { value: currentPart()!.physicalConstants.hMeasured }"></span>
-      <span [innerHTML]="'CONSTANTS.PROTOCOL' | translate: { value: currentPart()!.physicalConstants.protocol }"></span>
-    }
+      <span class="fw-bold">{{currentPart()!.physicalConstants.protocol}}</span>
+    </div>
+    <span class="border-divider">|</span>
   </div>
 </div>
 
@@ -122,5 +137,7 @@
       </tbody>
     </table>
   </div>
-  <button class="btn btn-success" [disabled]="!calculateIsDone()" (click)="getReport()">{{"SHARED.BUTTON.REPORT" | translate}}</button>
+  <div class="d-flex justify-content-end mt-2">
+    <button class="btn btn-success" [disabled]="!calculateIsDone()" (click)="getReport()">{{"SHARED.BUTTON.REPORT" | translate}}</button>
+  </div>
 </div>

@@ -3,11 +3,13 @@ import {ProductConfigService} from '../../../data/service/product-config.service
 import {EventsService} from '../../../data/service/events.service';
 import {CalculationPage} from '../calculation-page/calculation-page';
 import {PartData, ProductData} from '../../../data/model/product-data.interface';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-body',
   imports: [
-    CalculationPage
+    CalculationPage,
+    TranslatePipe
   ],
   templateUrl: './body.html',
   styleUrl: './body.scss',

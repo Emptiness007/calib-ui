@@ -34,11 +34,14 @@ export class CalculationService {
     const kPlatesOut = this.round(rNomOut - baseOffset + kCarriage, 4);
 
     // Расчет угла (если a1 != a2)
-    let angle: Angle = { degrees: 0, minutes: 0, seconds: 0, decimal: 0 };
+    let angle = { degrees: 0, minutes: 0, seconds: 0, decimal: 0 };
     if (Math.abs(a1 - a2) > 0.000001) {
       const tanValue = (rNomIn - rNomOut) / (a1 - a2);
+      console.log(`tan = ${tanValue}`);
       const angleDecimal = Math.abs(Math.atan(tanValue) * 180 / Math.PI);
+      console.log(`angleDecimal = ${angleDecimal}`);
       angle = this.angleConverter.toDMS(angleDecimal);
+      console.log(`angle =`, angle);
     }
 
     return {

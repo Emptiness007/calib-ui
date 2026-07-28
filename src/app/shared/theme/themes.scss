@@ -78,6 +78,7 @@
 
   --card-border-color: #e2eaf2;
 
+  --tree-wrapper-color: #f7faff;
   --tree-node-active: #f7faff;
   --tree-node-hover: #f2f7fd;
   --tree-node-header-hover: #f2f7fd;
@@ -89,6 +90,8 @@
   --tree-child-active-color: #0a1f3a;
   --tree-child-active-bg: #e6eff9;
   --tree-child-border-color: #dce5ef;
+
+  --empty-card-color:  #f7faff;
 }
 
 body[data-theme="dark"] {

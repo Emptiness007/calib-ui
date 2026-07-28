@@ -8,27 +8,26 @@
     "CALCULATE": "Рассчитать"
   },
 
-  "CALCULATION-TYPE": {
-    "NA": "Лопатка направляющего аппарата",
-    "KR": "Кольцо рабочее"
-  },
-
   "INPUT": {
     "SELECT-TYPE": "Выберите изделие",
-    "PLACEHOLDER": "Введите значение"
+    "PLACEHOLDER": "Введите значение",
+    "DISABLED-INFO": "Для выполнения расчёта заполните все поля"
   },
 
   "INFO": {
     "INPUT": "Входные данные",
     "RESULT": "Результаты вычислений",
-    "CONSTANTS": "Используемые константы"
+    "CONSTANTS": "Используемые константы",
+    "SELECT-PRODUCT": "Выберите изделие и деталь в меню слева, чтобы начать расчёт",
+    "SELECT-IN-MENU": "Выберите в меню",
+    "CURRENT-PRODUCT": "Выбрано изделие: "
   },
 
   "CONSTANTS": {
-    "TOLERANCE": "Допуск X: {{value}} мм",
-    "H-SET": "Н<sub>заданное</sub>: {{value}} мм",
-    "H-MEASURED": "Н<sub>измеренное</sub>: {{value}} мм",
-    "PROTOCOL": "Значения взяты на основании: {{value}}"
+    "TOLERANCE": "Допуск X - {{value}} мм",
+    "H-SET": "Н<sub>заданное</sub> - {{value}} мм",
+    "H-MEASURED": "Н<sub>измеренное</sub> - {{value}} мм",
+    "PROTOCOL": "на основании {{value}}"
   },
 
   "TABLE": {
@@ -42,6 +41,12 @@
     "KPLATESIN": "K<sub>плиток вх</sub>  (мм)",
     "KPLATESOUT": "K<sub>плиток вых</sub>  (мм)",
     "ANGLE": "Угол А (Г°М’С”)"
+  },
+  "ERROR": {
+    "CONFIG": {
+      "NOT-LOADED": "Конфигурация не загружена",
+      "PART-NOT-FOUND": "Деталь {{partId}} не найдена в изделии {{productId}}"
+    }
   }
 
 }

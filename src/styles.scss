@@ -4,7 +4,6 @@
 @use 'bootstrap/scss/bootstrap';
 @use 'bootstrap-icons/font/bootstrap-icons';
 
-
 //значения по умолчанию для всего документа
 html, body { height: 100%; }
 body {
@@ -176,13 +175,13 @@ thead {
 }
 
 .btn-primary {
-  background-color: var(--btn-primary-color);
-  border-color: var(--btn-primary-color);
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
   color: var(--white-color);
 
   &:hover{
-    background-color: var(--btn-dark-primary-color);
-    border-color: var(--btn-dark-primary-color);
+    background-color: var(--dark-primary-color);
+    border-color: var(--dark-primary-color);
   }
 }
 

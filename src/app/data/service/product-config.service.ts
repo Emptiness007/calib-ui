@@ -24,6 +24,19 @@ export class ProductConfigService {
   getConfig(){
     return this.config;
   }
+
+  getPart(productId: string, partId: string): PartData | null {
+    if (!this.config) return null;
+    const product = this.config.product.find(p => p.id === productId);
+    if (!product) return null;
+    const part = product.parts.find(p => p.id === partId);
+    return part ?? null;
+  }
+
+  getProduct(productId: string): ProductData | null {
+    if (!this.config) return null;
+    return this.config.product.find(p => p.id === productId) ?? null;
+  }
   // Обновить продукт
   updateProduct(productId: string, data: Partial<ProductData>): Observable<any> {
     return this.http.put(`/api/config/products/${productId}`, data);

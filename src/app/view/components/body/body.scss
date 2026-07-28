@@ -29,7 +29,7 @@
 }
 
 .tree-header {
-  padding-bottom: 15px;
+
   border-bottom: 2px solid #e8eef5;
   margin-bottom: 20px;
 }
@@ -40,7 +40,7 @@
   margin: -8px -12px;
   padding: 8px 12px;
   border-radius: 10px;
-  background: var(--tree-node-active, #e8f0fe);
+  background: var(--tree-wrapper-color, #e8f0fe);
 }
 
 .tree {
@@ -155,3 +155,40 @@
 .tree-child.active .child-icon {
   opacity: 0.8;
 }
+
+.empty-card{
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--empty-card-color);
+  margin-top: 200px;
+  border: 2px dashed #dce5ef;
+  border-radius: 10px;
+}
+
+.arrow-hint{
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  animation: arrow-move 2s ease-in-out infinite;
+}
+
+.arrow-hint .arrow-icon{
+  font-size: 25px;
+  animation: arrow-move 1.8s ease-in-out infinite;
+}
+
+
+@keyframes arrow-move {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+

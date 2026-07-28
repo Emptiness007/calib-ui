@@ -25,13 +25,22 @@
       </div>
     </div>
   </div>
-  <div class="d-flex flex-column flex-grow-1 overflow-auto h-100 align-items-center">
+  <div class="d-flex flex-column flex-grow-1 overflow-auto h-100 align-items-center ">
     @if (selectedPart()) {
       <app-calculation-page
-        class="d-flex flex-column gap-4"
+        class="d-flex flex-column gap-3"
         [productId]="selectedProductId()"
         [partId]="selectedPart()!.id">
       </app-calculation-page>
+    } @else {
+      <div class="empty-card">
+        <p class="fw-bold">{{'INFO.SELECT-PRODUCT' | translate}}</p>
+        <div class="d-flex flex-row gap-3 arrow-hint">
+          <i class="bi bi-arrow-left-circle fs-5 arrow-hint"></i>
+          <span >{{'INFO.SELECT-IN-MENU' | translate}}</span>
+        </div>
+
+      </div>
     }
   </div>
 </section>
