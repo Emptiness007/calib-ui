@@ -1,10 +1,112 @@
 <div class="modal-header d-flex justify-content-center dialog-header-config">
   <h3 class="m-0 text-center">{{'SHARED.DIALOG.SETTINGS.TITLE' | translate}}</h3>
 </div>
-<div class="modal-body d-flex flex-column dialog-body-config">
-  <h2>Пока это не основное, поэтому будет доработано позже...</h2>
+<div class="modal-body d-flex flex-row dialog-body-config p-3 gap-3">
+  <!-- Плашка для дерева -->
+  <div class="tree-container shadow-custom">
+    <app-product-tree [products]="products()" [selectedPartId]="selectedPart()?.id"
+      (partSelected)="onPartSelect($event)">
+    </app-product-tree>
+  </div>
+
+  <div class="flex-grow-1 h-100 overflow-auto">
+    @if (selectedPart()) {
+    <div class="card shadow-custom p-3 h-100">
+      <h5 class="fw-bold mb-3">{{ selectedProduct()?.nameFull }} - {{ selectedPart()?.nameDisplay }}</h5>
+
+      <h6 class="fw-semibold mb-3">{{ 'DIALOGS.SETTINGS.STAGES_AND_HEIGHTS' | translate }}</h6>
+
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th>{{ 'TABLE.STAGE' | translate }}</th>
+              <th>{{ 'TABLE.A1' | translate }}</th>
+              <th>{{ 'TABLE.A2' | translate }}</th>
+              <th>{{ 'DIALOGS.SETTINGS.ACTIONS' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (stage of selectedPart()?.stages | keyvalue; track stage.key) {
+            <tr>
+              <td>{{ stage.key }}</td>
+              <td>
+                @if (editingStageKey() === stage.key) {
+                <input type="number" step="any" class="form-control form-control-sm text-center" [value]="editA1()"
+                  (input)="editA1.set(+$any($event.target).value)">
+                } @else {
+                <input type="number" class="form-control form-control-sm text-center" [value]="stage.value.a1" disabled>
+                }
+              </td>
+              <td>
+                @if (editingStageKey() === stage.key) {
+                <input type="number" step="any" class="form-control form-control-sm text-center" [value]="editA2()"
+                  (input)="editA2.set(+$any($event.target).value)">
+                } @else {
+                <input type="number" class="form-control form-control-sm text-center" [value]="stage.value.a2" disabled>
+                }
+              </td>
+              <td>
+                <div class="d-flex justify-content-center gap-1">
+                  @if (editingStageKey() === stage.key) {
+                  <button class="btn btn-sm btn-outline-success border-0 p-1" (click)="saveEdit(stage.key)"
+                    [title]="'SHARED.BUTTON.SAVE' | translate">
+                    <i class="bi bi-check2"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-secondary border-0 p-1" (click)="cancelEdit()"
+                    [title]="'SHARED.BUTTON.CANCEL' | translate">
+                    <i class="bi bi-x"></i>
+                  </button>
+                  } @else {
+                  <button class="btn btn-sm btn-outline-secondary border-0 p-1"
+                    (click)="startEdit(stage.key, stage.value.a1, stage.value.a2)"
+                    [title]="'SHARED.BUTTON.EDIT' | translate">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger border-0 p-1" (click)="deleteStage(stage.key)"
+                    [title]="'SHARED.BUTTON.DELETE' | translate">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  }
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-auto pt-3 border-top">
+        <h6 class="fw-semibold mb-2">{{ 'DIALOGS.SETTINGS.ADD_STAGE' | translate }}</h6>
+        <form [formGroup]="addStageForm" (ngSubmit)="addStage()" class="d-flex flex-column gap-2">
+          <div class="row g-2 align-items-center">
+            <div class="col-4">
+              <input type="text" class="form-control form-control-sm" formControlName="stageName"
+                [placeholder]="'DIALOGS.SETTINGS.STAGE_NAME' | translate">
+            </div>
+            <div class="col-3">
+              <input type="number" step="any" class="form-control form-control-sm text-center" formControlName="a1"
+                placeholder="a1">
+            </div>
+            <div class="col-3">
+              <input type="number" step="any" class="form-control form-control-sm text-center" formControlName="a2"
+                placeholder="a2">
+            </div>
+            <div class="col-2 text-end">
+              <button type="submit" class="btn btn-sm btn-primary w-100" [disabled]="addStageForm.invalid">{{
+                'SHARED.BUTTON.ADD' | translate }}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    } @else {
+    <div class="d-flex h-100 align-items-center justify-content-center text-muted">
+      {{ 'DIALOGS.SETTINGS.SELECT_PART' | translate }}
+    </div>
+    }
+  </div>
 </div>
 <div class="modal-footer d-flex justify-content-end dialog-footer-config">
-  <button class="btn btn-secondary border-dark"
-          (click)="onClose()">{{'SHARED.BUTTON.CLOSE' | translate}}</button>
+  <button class="btn btn-secondary border-dark" (click)="onClose()">{{'SHARED.BUTTON.CLOSE' | translate}}</button>
 </div>

@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, inject, signal, computed} from '@ang
 import {ProductConfigService} from '../../../data/service/product-config.service';
 import {EventsService} from '../../../data/service/events.service';
 import {CalculationPage} from '../calculation-page/calculation-page';
+import {ProductTreeComponent} from '../product-tree/product-tree.component';
 import {PartData, ProductData} from '../../../data/model/product-data.interface';
 import {TranslatePipe} from '@ngx-translate/core';
 
@@ -9,6 +10,7 @@ import {TranslatePipe} from '@ngx-translate/core';
   selector: 'app-body',
   imports: [
     CalculationPage,
+    ProductTreeComponent,
     TranslatePipe
   ],
   templateUrl: './body.html',
@@ -20,28 +22,12 @@ export class Body {
   private readonly eventsService = inject(EventsService);
 
   products = signal<ProductData[]>([]);
-  expandedProducts = signal<Set<string>>(new Set());
 
   selectedPart = signal<PartData | null>(null);
   selectedProduct = signal<ProductData | null>(null);
 
   constructor() {
     this.loadProducts();
-  }
-
-  toggleProduct(productId: string): void {
-    const current = this.expandedProducts();
-    const newSet = new Set(current);
-    if (newSet.has(productId)) {
-      newSet.delete(productId);
-    } else {
-      newSet.add(productId);
-    }
-    this.expandedProducts.set(newSet);
-  }
-
-  isProductExpanded(productId: string): boolean {
-    return this.expandedProducts().has(productId);
   }
 
   private loadProducts(): void {

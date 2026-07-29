@@ -1,0 +1,16 @@
+.dialog-body-config {
+  height: 700px;
+}
+
+.tree-container {
+  background-color: var(--white-color);
+  border-radius: 12px;
+  padding: 20px 24px 28px 24px;
+  border: 1px solid var(--card-border-color);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  width: 300px;
+}

@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([spinnerInterceptor])
+      withInterceptors([baseUrlInterceptor, spinnerInterceptor])
     ),
     provideTranslateService({
       lang:  DEFAULT_LANGUAGE,

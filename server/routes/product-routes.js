@@ -4,7 +4,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
-const CONFIG_PATH = path.join(__dirname, '../config/product-data.json');
+const CONFIG_PATH = path.join(__dirname, '../../public/config/product-data.json');
 
 // ==================== POST запросы ====================
 

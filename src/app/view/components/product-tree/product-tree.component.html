@@ -1,0 +1,20 @@
+<div class="tree-wrapper w-100 h-100">
+  <div class="tree">
+    @for (product of products(); track product.id) {
+      <div class="tree-node" [class.active]="isProductExpanded(product.id)" [class.open]="isProductExpanded(product.id)">
+        <div class="tree-node-header" (click)="toggleProduct(product.id)">
+          <span class="tree-toggle">▶</span>
+          <span class="fw-semibold">{{product.nameFull}}</span>
+        </div>
+        <div class="tree-children">
+          @for (part of product.parts; track part.id) {
+            <div class="tree-child" [class.active]="selectedPartId() === part.id" (click)="partSelected.emit({part: part, product: product})">
+              <span class="child-icon">▹</span>
+              <span class="flex-1">{{part.nameDisplay}}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
