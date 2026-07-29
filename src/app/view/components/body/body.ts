@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal, computed} from '@angular/core';
 import {ProductConfigService} from '../../../data/service/product-config.service';
 import {EventsService} from '../../../data/service/events.service';
 import {CalculationPage} from '../calculation-page/calculation-page';
@@ -23,7 +23,7 @@ export class Body {
   expandedProducts = signal<Set<string>>(new Set());
 
   selectedPart = signal<PartData | null>(null);
-  selectedProductId = signal<string>('');
+  selectedProduct = signal<ProductData | null>(null);
 
   constructor() {
     this.loadProducts();
@@ -55,8 +55,8 @@ export class Body {
     });
   }
 
-  selectPart(part: PartData, productId: string): void {
-    this.selectedProductId.set(productId);
+  selectPart(part: PartData, product: ProductData): void {
+    this.selectedProduct.set(product);
     this.selectedPart.set(part);
   }
 }

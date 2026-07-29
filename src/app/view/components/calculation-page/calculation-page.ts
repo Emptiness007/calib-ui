@@ -5,10 +5,8 @@ import {StepResultData} from '../../../data/model/step-result-data';
 import {CalculationService} from '../../../data/service/calculation.service';
 import {Angle} from '../../../data/model/interface/angle.interface';
 import {ExcelExportService} from '../../../data/service/excel-export.service';
-import {ProductConfigService} from '../../../data/service/product-config.service';
 import {PartData, ProductData} from '../../../data/model/product-data.interface';
 import {NotificationService} from '../../../shared/view/components/notifications/notification.service';
-import {TextT} from '../../../shared/translate/translate.config';
 
 export const INPUT_FIELDS = {
   STAGE: 'stage',
@@ -38,20 +36,17 @@ export const OUTPUT_FIELDS = {
 })
 export class CalculationPage {
   private readonly calculationService = inject(CalculationService);
-  private readonly productConfigService = inject(ProductConfigService);
   private readonly excelExportService = inject(ExcelExportService);
   private readonly notificationService = inject(NotificationService);
 
-  productId = input.required<string>();
-  partId = input.required<string>();
+  product = input.required<ProductData>();
+  part = input.required<PartData>();
 
   inputRows = signal<StepInputData[]>([]);
   outputRows = signal<StepResultData[]>([]);
   canCalculate = signal<boolean>(false);
   calculateIsDone = signal<boolean>(false);
 
-  protected currentPart = signal<PartData | null>(null);
-  protected currentProduct = signal<ProductData | null>(null);
   readonly inputFieldList = computed(() => {
     return [
       INPUT_FIELDS.STAGE,
@@ -74,35 +69,11 @@ export class CalculationPage {
 
   constructor() {
     effect(() => {
-      this.productId();
-      this.partId();
-
+      const p = this.part();
       untracked(() => {
-        this.loadPartData();
+        this.initializeData(p);
       });
     });
-  }
-
-  private loadPartData(): void {
-    const product = this.productConfigService.getProduct(this.productId());
-    if (!product) {
-      const errorMsg = !this.productConfigService.getConfig()
-        ? new TextT('CONFIG.NOT-LOADED')
-        : new TextT('CONFIG.PRODUCT-NOT-FOUND', { productId: this.productId() });
-      this.notificationService.showNegative(errorMsg);
-      return;
-    }
-
-    const part = this.productConfigService.getPart(this.productId(), this.partId());
-    if (!part) {
-      const errorMsg = new TextT('CONFIG.PART-NOT-FOUND', { partId: this.partId(), productId: this.productId() });
-      this.notificationService.showNegative(errorMsg);
-      return;
-    }
-
-    this.currentProduct.set(product);
-    this.currentPart.set(part);
-    this.initializeData(part);
   }
 
   private initializeData(part: PartData): void {
@@ -115,8 +86,8 @@ export class CalculationPage {
       const a2 = heightConstants?.a2 ?? 0;
 
       return new StepInputData(
-        this.productId(),
-        this.partId(),
+        this.product().id,
+        this.part().id,
         stage,
         a1,
         a2
@@ -130,7 +101,7 @@ export class CalculationPage {
   }
 
   calculateAll(): void {
-    const part = this.currentPart();
+    const part = this.part();
     if (!part) return;
 
     const results = this.inputRows().map(row => {
@@ -138,8 +109,8 @@ export class CalculationPage {
         if (!this.hasValue(row.rNomIn)) return new StepResultData();
 
         const payload = {
-          productId: this.productId(),
-          partId: this.partId(),
+          productId: this.product().id,
+          partId: this.part().id,
           stage: row.stage,
           rNomIn: Number(row.rNomIn),
           rNomOut: NaN
@@ -161,8 +132,8 @@ export class CalculationPage {
         }
 
         const payload = {
-          productId: this.productId(),
-          partId: this.partId(),
+          productId: this.product().id,
+          partId: this.part().id,
           stage: row.stage,
           rNomIn,
           rNomOut
@@ -190,7 +161,7 @@ export class CalculationPage {
   }
 
   clearAllInput(): void {
-    const part = this.currentPart();
+    const part = this.part();
     if (part) {
       this.initializeData(part);
     }
@@ -203,7 +174,7 @@ export class CalculationPage {
 
   private updateCanCalculate(): void {
     const rows = this.inputRows();
-    const part = this.currentPart();
+    const part = this.part();
     if (!part) {
       this.canCalculate.set(false);
       return;
@@ -221,7 +192,7 @@ export class CalculationPage {
   }
 
   async getReport(): Promise<void> {
-    const part = this.currentPart();
+    const part = this.part();
     if (!part) return;
 
     const inputRows = this.inputRows();
@@ -231,7 +202,7 @@ export class CalculationPage {
   }
 
   isSpecialStage(stage: number): boolean {
-    const part = this.currentPart();
+    const part = this.part();
     return part?.specialStages.includes(stage) ?? false;
   }
 

@@ -14,7 +14,7 @@
             </div>
             <div class="tree-children">
               @for (part of product.parts; track part.id) {
-                <div class="tree-child" [class.active]="selectedPart()?.id === part.id" (click)="selectPart(part, product.id)">
+                <div class="tree-child" [class.active]="selectedPart()?.id === part.id" (click)="selectPart(part, product)">
                   <span class="child-icon">▹</span>
                   <span class="flex-1">{{part.nameDisplay}}</span>
                 </div>
@@ -29,8 +29,8 @@
     @if (selectedPart()) {
       <app-calculation-page
         class="d-flex flex-column gap-3"
-        [productId]="selectedProductId()"
-        [partId]="selectedPart()!.id">
+        [product]="selectedProduct()!"
+        [part]="selectedPart()!">
       </app-calculation-page>
     } @else {
       <div class="empty-card">
