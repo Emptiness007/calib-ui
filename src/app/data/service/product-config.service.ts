@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { ProductDataConfig, ProductData, PartData } from '../model/product-data.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -11,9 +11,22 @@ export class ProductConfigService {
   private readonly http = inject(HttpClient);
 
   private config: ProductDataConfig | null = null;
+  
+  // Сигнал, отражающий доступность бэкенда/конфигурации
+  isBackendAvailable = signal<boolean>(true);
+
+  // Проверка доступности бэкенда
+  checkBackendStatus(): void {
+    this.http.get('/api/health').subscribe({
+      next: () => this.isBackendAvailable.set(true),
+      error: () => this.isBackendAvailable.set(false)
+    });
+  }
 
   // Загрузка конфигурации из файла
   loadConfig(): Observable<ProductDataConfig> {
+    this.checkBackendStatus();
+
     return this.http.get<ProductDataConfig>('/public/config/product-data.json').pipe(
       tap(cfg => {
         this.config = cfg;

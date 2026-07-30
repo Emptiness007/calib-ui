@@ -6,4 +6,5 @@ export const environment = {
   backendURL: "http://localhost:3000",
   authURL: 'http://localhost:3333/api',
   loginUrl: 'http://localhost:3333',
+  settingsEnabled: true
 };

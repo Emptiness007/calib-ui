@@ -1,30 +1,23 @@
 <section class="d-flex flex-row m-1 my-3 p-1 h-100 overflow-auto">
   <div class="tree-container shadow-custom">
-    <div class="tree-header">
-      <h4>Список изделий</h4>
-    </div>
-    <app-product-tree
-      [products]="products()"
-      [selectedPartId]="selectedPart()?.id"
+    <h6 class="fw-bold mb-2">Список изделий</h6>
+    <hr class="my-0 mb-3 text-secondary">
+    <app-product-tree [products]="products()" [selectedPartId]="selectedPart()?.id"
       (partSelected)="selectPart($event.part, $event.product)">
     </app-product-tree>
   </div>
   <div class="d-flex flex-column flex-grow-1 overflow-auto h-100 align-items-center ">
     @if (selectedPart()) {
-      <app-calculation-page
-        class="d-flex flex-column gap-3"
-        [product]="selectedProduct()!"
-        [part]="selectedPart()!">
-      </app-calculation-page>
+    <app-calculation-page class="w-100 px-3 h-100" [product]="selectedProduct()!" [part]="selectedPart()!">
+    </app-calculation-page>
     } @else {
-      <div class="empty-card">
-        <p class="fw-bold">{{'INFO.SELECT-PRODUCT' | translate}}</p>
-        <div class="d-flex flex-row gap-3 arrow-hint">
-          <i class="bi bi-arrow-left-circle fs-5 arrow-hint"></i>
-          <span >{{'INFO.SELECT-IN-MENU' | translate}}</span>
-        </div>
-
+    <div class="empty-card">
+      <p class="fw-bold">{{'INFO.SELECT-PRODUCT' | translate}}</p>
+      <div class="d-flex flex-row gap-3 arrow-hint">
+        <i class="bi bi-arrow-left-circle fs-5 arrow-hint"></i>
+        <span>{{'INFO.SELECT-IN-MENU' | translate}}</span>
       </div>
+    </div>
     }
   </div>
 </section>

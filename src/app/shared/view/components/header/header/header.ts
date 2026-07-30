@@ -29,6 +29,7 @@ import {SharedFileService} from '../../../../service/shared-file.service';
 import {CURRENT_APP_VERSION} from '../../../../../app.constant.config';
 import {InstructionStore} from '../../../../model/store/instruction-store';
 import {DEFAULT_APP_VERSION} from '../../../../shared-constant.config';
+import {ProductConfigService} from '../../../../../data/service/product-config.service';
 
 @Component({
   selector: 'avi-header',
@@ -65,6 +66,9 @@ export class Header {
   readonly currentAppTheme = signal(DEFAULT_THEME);
   readonly currentAppThemeIcon = signal(DEFAULT_THEME_ICON);
   readonly showNewsAttention = computed(() => this.currentAppVersion() !== this.userAppVersion());
+
+  private readonly productConfigService = inject(ProductConfigService);
+  readonly isSettingsEnabled = computed(() => environment.settingsEnabled && this.productConfigService.isBackendAvailable());
 
   readonly attentionBellLogoSize = DEFAULT_ATTENTION_BELL_LOGO_SIZE;
   readonly currentHoliday = this.holidayService.getCurrentHolidayValue();
